@@ -1,0 +1,85 @@
+version: '3.9'
+
+services:
+  # ─── MongoDB ──────────────────────────────────────────────────────
+  mongo:
+    image: mongo:7
+    container_name: au-drive-mongo
+    restart: unless-stopped
+    ports:
+      - '27017:27017'
+    environment:
+      MONGO_INITDB_DATABASE: au-drive
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - au-drive-network
+
+  # ─── Redis ────────────────────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: au-drive-redis
+    restart: unless-stopped
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis-data:/data
+    networks:
+      - au-drive-network
+    command: redis-server --appendonly yes
+
+  # ─── Express Server ───────────────────────────────────────────────
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: au-drive-server
+    restart: unless-stopped
+    ports:
+      - '5000:5000'
+    env_file:
+      - .env
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/au-drive
+      - REDIS_URL=redis://redis:6379
+      - AI_SERVICE_URL=http://ai-service:8000
+    volumes:
+      - ./server:/app
+      - /app/node_modules
+    depends_on:
+      - mongo
+      - redis
+    networks:
+      - au-drive-network
+
+  # ─── AI Service ───────────────────────────────────────────────────
+  ai-service:
+    build:
+      context: ./ai-service
+      dockerfile: Dockerfile
+    container_name: au-drive-ai
+    restart: unless-stopped
+    ports:
+      - '8000:8000'
+    env_file:
+      - .env
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/au-drive
+      - REDIS_URL=redis://redis:6379
+    volumes:
+      - ./ai-service:/app
+    depends_on:
+      - mongo
+      - redis
+    networks:
+      - au-drive-network
+
+# ─── Volumes ──────────────────────────────────────────────────────
+volumes:
+  mongo-data:
+  redis-data:
+
+# ─── Network ──────────────────────────────────────────────────────
+networks:
+  au-drive-network:
+    driver: bridge
