@@ -3,47 +3,33 @@
 const { Router } = require('express');
 const router = Router();
 
-// TODO Phase 1: Import auth controller
-// const { register, login, logout, refreshToken, getMe } = require('./auth.controller');
+const { register, login, logout, refreshToken, getMe } = require('./auth.controller');
+const { validate, registerSchema, loginSchema } = require('./auth.validation');
+const { verifyToken } = require('../../middleware/auth.middleware');
 
 /**
- * POST /api/auth/register
- * TODO Phase 1: Validate input → hash password → create user → return JWT
+ * POST /api/auth/register  — Create account, returns user + JWT
  */
-router.post('/register', (req, res) => {
-  res.status(501).json({ success: false, message: 'TODO: implement register' });
-});
+router.post('/register', validate(registerSchema), register);
 
 /**
- * POST /api/auth/login
- * TODO Phase 1: Validate credentials → compare hash → return access + refresh token
+ * POST /api/auth/login  — Validate credentials, returns user + JWT
  */
-router.post('/login', (req, res) => {
-  res.status(501).json({ success: false, message: 'TODO: implement login' });
-});
+router.post('/login', validate(loginSchema), login);
 
 /**
- * POST /api/auth/logout
- * TODO Phase 1: Invalidate refresh token, clear cookie
+ * POST /api/auth/logout  — Clears auth cookies
  */
-router.post('/logout', (req, res) => {
-  res.status(501).json({ success: false, message: 'TODO: implement logout' });
-});
+router.post('/logout', logout);
 
 /**
- * POST /api/auth/refresh
- * TODO Phase 1: Verify refresh token → issue new access token
+ * POST /api/auth/refresh  — Rotate refresh token → new access token
  */
-router.post('/refresh', (req, res) => {
-  res.status(501).json({ success: false, message: 'TODO: implement token refresh' });
-});
+router.post('/refresh', refreshToken);
 
 /**
- * GET /api/auth/me
- * TODO Phase 1: Return current user profile (requires verifyToken middleware)
+ * GET /api/auth/me  — Get current user profile (protected)
  */
-router.get('/me', (req, res) => {
-  res.status(501).json({ success: false, message: 'TODO: implement get me' });
-});
+router.get('/me', verifyToken, getMe);
 
 module.exports = router;

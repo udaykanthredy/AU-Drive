@@ -1,6 +1,6 @@
 'use strict';
 
-require('dotenv').config();
+require('dotenv').config({ path: require('path').resolve(__dirname, '../../.env') });
 
 const app = require('./app');
 const { connectDB } = require('./config/db');
@@ -18,9 +18,13 @@ async function startServer() {
     await connectDB();
     logger.info('✅ MongoDB connected');
 
-    // Connect to Redis
-    await connectRedis();
-    logger.info('✅ Redis connected');
+    // Connect to Redis (optional for local auth tests)
+    try {
+      await connectRedis();
+      logger.info('✅ Redis connected');
+    } catch (err) {
+      logger.warn('⚠️ Redis connection failed (probably not running locally) — skipping for now');
+    }
 
     // Start HTTP server
     const server = app.listen(PORT, () => {

@@ -30,7 +30,7 @@ function getR2Client() {
  */
 async function getPresignedUploadUrl(userId, originalName, mimeType) {
   const extension = originalName.split('.').pop();
-  const r2Key = `users/${userId}/${uuidv4()}.${extension}`;
+  const r2Key = `users/${userId}/files/${uuidv4()}-${originalName}`;
 
   const command = new PutObjectCommand({
     Bucket: BUCKET,
