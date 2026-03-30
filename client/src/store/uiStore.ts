@@ -4,8 +4,10 @@ import { persist } from 'zustand/middleware';
 interface UIState {
   viewMode: 'grid' | 'list';
   previewFileId: string | null;
+  shareFileId: string | null;
   setViewMode: (mode: 'grid' | 'list') => void;
   setPreviewFile: (fileId: string | null) => void;
+  setShareFile: (fileId: string | null) => void;
 }
 
 /**
@@ -17,9 +19,11 @@ export const useUIStore = create<UIState>()(
     (set) => ({
       viewMode: 'grid',
       previewFileId: null,
+      shareFileId: null,
 
       setViewMode: (viewMode) => set({ viewMode }),
       setPreviewFile: (previewFileId) => set({ previewFileId }),
+      setShareFile: (shareFileId) => set({ shareFileId }),
     }),
     {
       name: 'au-drive-ui-prefs',

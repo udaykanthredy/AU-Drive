@@ -11,6 +11,8 @@ import { UploadCloud, Loader2 } from 'lucide-react';
 import { useDropzone } from 'react-dropzone';
 import { useFileUploader } from '@/hooks/useFileUploader';
 import { UploadProgressPanel } from '@/components/drive/UploadProgressPanel';
+import { FilePreviewModal } from '@/components/drive/FilePreviewModal';
+import { ShareModal } from '@/components/drive/ShareModal';
 import type { Folder, File as FileModel } from '@/types';
 
 // TODO: Fetch real breadcrumb path array from backend based on current folderId
@@ -25,7 +27,7 @@ export default function DashboardPage() {
   const folderId = searchParams.get('folder');
   const router = useRouter();
   
-  const { viewMode } = useUIStore();
+  const { viewMode, setPreviewFile } = useUIStore();
   const { files, folders, isLoading, error } = useDrive(folderId);
   const breadcrumbs = useMockBreadcrumbs(folderId);
   const { uploadFiles } = useFileUploader();
@@ -44,8 +46,7 @@ export default function DashboardPage() {
   };
 
   const handleFileDoubleClick = (file: FileModel) => {
-    // Phase 2: Open preview modal
-    console.log('Double clicked file:', file.originalName);
+    setPreviewFile(file._id);
   };
 
   // Render Loading State
@@ -136,6 +137,8 @@ export default function DashboardPage() {
       </div>
       
       <UploadProgressPanel />
+      <FilePreviewModal />
+      <ShareModal />
     </div>
   );
 }

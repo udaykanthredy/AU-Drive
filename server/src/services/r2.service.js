@@ -82,8 +82,29 @@ async function deleteObject(r2Key) {
   logger.info(`R2 object deleted: ${r2Key}`);
 }
 
+/**
+ * Upload a file buffer directly to R2 from the server.
+ * Used to proxy uploads through Express (avoids browser CORS issues).
+ *
+ * @param {string} r2Key
+ * @param {Buffer} body
+ * @param {string} mimeType
+ */
+async function uploadToR2(r2Key, body, mimeType) {
+  const command = new PutObjectCommand({
+    Bucket: BUCKET,
+    Key: r2Key,
+    Body: body,
+    ContentType: mimeType,
+  });
+
+  await getR2Client().send(command);
+  logger.info(`R2 object uploaded (proxied): ${r2Key}`);
+}
+
 module.exports = {
   getPresignedUploadUrl,
   getPresignedDownloadUrl,
   deleteObject,
+  uploadToR2,
 };

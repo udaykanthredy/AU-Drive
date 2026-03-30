@@ -3,6 +3,10 @@ import { MoreVertical, Star, Folder as FolderIcon } from 'lucide-react';
 import type { File as FileModel, Folder } from '@/types';
 import { formatBytes, getFileIcon } from './FileCard';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
+import { useQueryClient } from '@tanstack/react-query';
+import { filesApi } from '@/services/files.service';
+import { useUIStore } from '@/store/uiStore';
+import toast from 'react-hot-toast';
 
 interface FileListTableProps {
   files: FileModel[];
@@ -12,6 +16,20 @@ interface FileListTableProps {
 }
 
 export function FileListTable({ files, folders, onFolderClick, onFileDoubleClick }: FileListTableProps) {
+  const queryClient = useQueryClient();
+  const { setShareFile } = useUIStore();
+
+  const handleDeleteFile = async (file: FileModel, e: React.MouseEvent) => {
+    e.stopPropagation();
+    try {
+      await filesApi.deleteFile(file._id);
+      toast.success('File moved to trash');
+      queryClient.invalidateQueries({ queryKey: ['files', file.folderId] });
+    } catch {
+      toast.error('Failed to move to trash');
+    }
+  };
+
   if (files.length === 0 && folders.length === 0) {
     return (
       <div className="flex -mt-10 items-center justify-center p-12 text-gray-500 text-sm italic">
@@ -113,14 +131,23 @@ export function FileListTable({ files, folders, onFolderClick, onFileDoubleClick
                     className="min-w-[160px] bg-gray-800 border border-gray-700 rounded-lg p-1.5 shadow-xl animate-in fade-in z-50 mr-4"
                     align="end"
                   >
-                    <DropdownMenu.Item className="px-3 py-2 text-sm text-gray-200 outline-none cursor-pointer hover:bg-gray-700 rounded-md">
+                    <DropdownMenu.Item 
+                      onClick={(e) => { e.stopPropagation(); onFileDoubleClick?.(file); }}
+                      className="px-3 py-2 text-sm text-gray-200 outline-none cursor-pointer hover:bg-gray-700 rounded-md"
+                    >
                       Preview
                     </DropdownMenu.Item>
-                    <DropdownMenu.Item className="px-3 py-2 text-sm text-gray-200 outline-none cursor-pointer hover:bg-gray-700 rounded-md">
+                    <DropdownMenu.Item 
+                      onClick={(e) => { e.stopPropagation(); setShareFile(file._id); }}
+                      className="px-3 py-2 text-sm text-gray-200 outline-none cursor-pointer hover:bg-gray-700 rounded-md"
+                    >
                       Share
                     </DropdownMenu.Item>
                     <DropdownMenu.Separator className="h-px bg-gray-700 my-1.5" />
-                    <DropdownMenu.Item className="px-3 py-2 text-sm text-red-400 outline-none cursor-pointer hover:bg-red-500/10 rounded-md transition-colors">
+                    <DropdownMenu.Item 
+                      onClick={(e) => handleDeleteFile(file, e)}
+                      className="px-3 py-2 text-sm text-red-400 outline-none cursor-pointer hover:bg-red-500/10 rounded-md transition-colors"
+                    >
                       Move to trash
                     </DropdownMenu.Item>
                   </DropdownMenu.Content>

@@ -2,6 +2,7 @@
 
 const { Router } = require('express');
 const { verifyToken, optionalToken } = require('../../middleware/auth.middleware');
+const sharesController = require('./shares.controller');
 const router = Router();
 
 /**
@@ -9,15 +10,11 @@ const router = Router();
  * GET    /api/shares/:token → access shared resource (no auth required — public)
  * DELETE /api/shares/:id   → revoke share link (auth required)
  */
-router.post('/', verifyToken, (req, res) => res.status(501).json({ message: 'TODO: create share' }));
+router.post('/', verifyToken, sharesController.createShare);
 
 // Public route — validate token, check expiry, return presigned URL
-router.get('/:token', optionalToken, (req, res) =>
-  res.status(501).json({ message: 'TODO: resolve share link' })
-);
+router.get('/:token', optionalToken, sharesController.getShare);
 
-router.delete('/:id', verifyToken, (req, res) =>
-  res.status(501).json({ message: 'TODO: revoke share' })
-);
+router.delete('/:id', verifyToken, sharesController.revokeShare);
 
 module.exports = router;

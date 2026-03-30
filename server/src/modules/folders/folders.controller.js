@@ -5,7 +5,7 @@ const catchAsync = require('../../utils/catchAsync');
 
 const createFolder = catchAsync(async (req, res) => {
   const { name, parentFolderId } = req.body;
-  const ownerId = req.user.id;
+  const ownerId = req.user.userId;
 
   if (!name) {
     return res.status(400).json({ success: false, message: 'Folder name is required' });
@@ -22,7 +22,7 @@ const createFolder = catchAsync(async (req, res) => {
 
 const listFolders = catchAsync(async (req, res) => {
   const { parentFolderId } = req.query;
-  const ownerId = req.user.id;
+  const ownerId = req.user.userId;
 
   const folders = await foldersService.getUserFolders(ownerId, parentFolderId || null);
 
@@ -32,7 +32,7 @@ const listFolders = catchAsync(async (req, res) => {
 const updateFolder = catchAsync(async (req, res) => {
   const { id } = req.params;
   const { name } = req.body;
-  const ownerId = req.user.id;
+  const ownerId = req.user.userId;
 
   if (!name) {
     return res.status(400).json({ success: false, message: 'Folder name is required' });
@@ -45,7 +45,7 @@ const updateFolder = catchAsync(async (req, res) => {
 
 const deleteFolder = catchAsync(async (req, res) => {
   const { id } = req.params;
-  const ownerId = req.user.id;
+  const ownerId = req.user.userId;
 
   const folder = await foldersService.softDeleteFolder(id, ownerId);
 

@@ -1,6 +1,10 @@
 import { FileText, Image as ImageIcon, File, MoreVertical, Star } from 'lucide-react';
 import type { File as FileModel } from '@/types';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
+import { useQueryClient } from '@tanstack/react-query';
+import { filesApi } from '@/services/files.service';
+import { useUIStore } from '@/store/uiStore';
+import toast from 'react-hot-toast';
 
 interface FileCardProps {
   file: FileModel;
@@ -22,6 +26,30 @@ export function getFileIcon(mimeType: string, className?: string) {
 }
 
 export function FileCard({ file, onDoubleClicked }: FileCardProps) {
+  const queryClient = useQueryClient();
+  const { setShareFile } = useUIStore();
+
+  const handleTrash = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    try {
+      await filesApi.deleteFile(file._id);
+      toast.success('File moved to trash');
+      queryClient.invalidateQueries({ queryKey: ['files', file.folderId] });
+    } catch {
+      toast.error('Failed to move to trash');
+    }
+  };
+
+  const handlePreview = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onDoubleClicked?.(file);
+  };
+
+  const handleShare = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setShareFile(file._id);
+  };
+
   return (
     <div
       onDoubleClick={() => onDoubleClicked?.(file)}
@@ -62,17 +90,26 @@ export function FileCard({ file, onDoubleClicked }: FileCardProps) {
               className="min-w-[160px] bg-gray-800 border border-gray-700 rounded-lg p-1.5 shadow-xl animate-in fade-in z-50 mr-4"
               align="end"
             >
-              <DropdownMenu.Item className="px-3 py-2 text-sm text-gray-200 outline-none cursor-pointer hover:bg-gray-700 rounded-md">
+              <DropdownMenu.Item 
+                onClick={handlePreview}
+                className="px-3 py-2 text-sm text-gray-200 outline-none cursor-pointer hover:bg-gray-700 rounded-md"
+              >
                 Preview
               </DropdownMenu.Item>
-              <DropdownMenu.Item className="px-3 py-2 text-sm text-gray-200 outline-none cursor-pointer hover:bg-gray-700 rounded-md">
+              <DropdownMenu.Item 
+                onClick={handleShare}
+                className="px-3 py-2 text-sm text-gray-200 outline-none cursor-pointer hover:bg-gray-700 rounded-md"
+              >
                 Share
               </DropdownMenu.Item>
               <DropdownMenu.Item className="px-3 py-2 text-sm text-gray-200 outline-none cursor-pointer hover:bg-gray-700 rounded-md">
                 Rename
               </DropdownMenu.Item>
               <DropdownMenu.Separator className="h-px bg-gray-700 my-1.5" />
-              <DropdownMenu.Item className="px-3 py-2 text-sm text-red-400 outline-none cursor-pointer hover:bg-red-500/10 rounded-md transition-colors">
+              <DropdownMenu.Item 
+                onClick={handleTrash}
+                className="px-3 py-2 text-sm text-red-400 outline-none cursor-pointer hover:bg-red-500/10 rounded-md transition-colors"
+              >
                 Move to trash
               </DropdownMenu.Item>
             </DropdownMenu.Content>
