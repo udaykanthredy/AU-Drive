@@ -5,6 +5,7 @@ import { formatBytes, getFileIcon } from './FileCard';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { useQueryClient } from '@tanstack/react-query';
 import { filesApi } from '@/services/files.service';
+import { foldersApi } from '@/services/folders.service';
 import { useUIStore } from '@/store/uiStore';
 import toast from 'react-hot-toast';
 
@@ -27,6 +28,27 @@ export function FileListTable({ files, folders, onFolderClick, onFileDoubleClick
       queryClient.invalidateQueries({ queryKey: ['files', file.folderId] });
     } catch {
       toast.error('Failed to move to trash');
+    }
+  };
+
+  const handleStarFile = async (file: FileModel) => {
+    try {
+      await filesApi.updateFile(file._id, { isStarred: !file.isStarred });
+      queryClient.invalidateQueries({ queryKey: ['files', file.folderId] });
+      queryClient.invalidateQueries({ queryKey: ['files-starred'] });
+      toast.success(file.isStarred ? 'Removed from starred' : 'Added to starred');
+    } catch {
+      toast.error('Failed to update star');
+    }
+  };
+
+  const handleStarFolder = async (folder: Folder) => {
+    try {
+      await foldersApi.starFolder(folder._id, !folder.isStarred);
+      queryClient.invalidateQueries({ queryKey: ['folders', folder.parentId] });
+      toast.success(folder.isStarred ? 'Removed from starred' : 'Added to starred');
+    } catch {
+      toast.error('Failed to update star');
     }
   };
 
@@ -84,6 +106,13 @@ export function FileListTable({ files, folders, onFolderClick, onFileDoubleClick
                     <DropdownMenu.Item className="px-3 py-2 text-sm text-gray-200 outline-none cursor-pointer hover:bg-gray-700 rounded-md">
                       Rename
                     </DropdownMenu.Item>
+                    <DropdownMenu.Item
+                      onClick={() => handleStarFolder(folder)}
+                      className="px-3 py-2 text-sm text-gray-200 outline-none cursor-pointer hover:bg-gray-700 rounded-md flex items-center gap-2"
+                    >
+                      <Star className={`w-3.5 h-3.5 ${folder.isStarred ? 'text-yellow-400 fill-current' : ''}`} />
+                      {folder.isStarred ? 'Unstar' : 'Star'}
+                    </DropdownMenu.Item>
                     <DropdownMenu.Item className="px-3 py-2 text-sm text-red-400 outline-none cursor-pointer hover:bg-red-500/10 rounded-md transition-colors">
                       Move to trash
                     </DropdownMenu.Item>
@@ -136,6 +165,13 @@ export function FileListTable({ files, folders, onFolderClick, onFileDoubleClick
                       className="px-3 py-2 text-sm text-gray-200 outline-none cursor-pointer hover:bg-gray-700 rounded-md"
                     >
                       Preview
+                    </DropdownMenu.Item>
+                    <DropdownMenu.Item
+                      onClick={() => handleStarFile(file)}
+                      className="px-3 py-2 text-sm text-gray-200 outline-none cursor-pointer hover:bg-gray-700 rounded-md flex items-center gap-2"
+                    >
+                      <Star className={`w-3.5 h-3.5 ${file.isStarred ? 'text-yellow-400 fill-current' : ''}`} />
+                      {file.isStarred ? 'Unstar' : 'Star'}
                     </DropdownMenu.Item>
                     <DropdownMenu.Item 
                       onClick={(e) => { e.stopPropagation(); setShareFile(file._id); }}

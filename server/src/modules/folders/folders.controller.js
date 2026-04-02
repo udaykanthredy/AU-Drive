@@ -43,6 +43,15 @@ const updateFolder = catchAsync(async (req, res) => {
   res.json({ success: true, data: folder });
 });
 
+const starFolder = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const { isStarred } = req.body;
+  const ownerId = req.user.userId;
+
+  const folder = await foldersService.updateFolder(id, ownerId, { isStarred: Boolean(isStarred) });
+  res.json({ success: true, data: folder });
+});
+
 const deleteFolder = catchAsync(async (req, res) => {
   const { id } = req.params;
   const ownerId = req.user.userId;
@@ -56,5 +65,6 @@ module.exports = {
   createFolder,
   listFolders,
   updateFolder,
+  starFolder,
   deleteFolder
 };

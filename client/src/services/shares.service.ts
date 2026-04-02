@@ -54,6 +54,11 @@ export const sharesApi = {
     return response.data;
   },
 
+  listMyShares: async () => {
+    const response = await apiClient.get<{ success: boolean; data: (Share & { resourceName: string })[] }>('/shares');
+    return response.data.data;
+  },
+
   revokeShare: async (shareId: string) => {
     await apiClient.delete(`/shares/${shareId}`);
   },

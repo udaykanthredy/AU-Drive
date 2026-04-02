@@ -105,8 +105,34 @@ async function revokeShare(userId, shareId) {
   return share;
 }
 
+async function listMyShares(userId) {
+  const shares = await Share.find({ createdBy: userId, isRevoked: false })
+    .sort({ createdAt: -1 })
+    .lean();
+
+  // Attach basic resource name to each share for display
+  const enriched = await Promise.all(
+    shares.map(async (share) => {
+      let resourceName = 'Unknown';
+      try {
+        if (share.resourceType === 'file') {
+          const file = await File.findOne({ _id: share.resourceId, isDeleted: false }).select('originalName').lean();
+          if (file) resourceName = file.originalName;
+        } else if (share.resourceType === 'folder') {
+          const folder = await Folder.findOne({ _id: share.resourceId, isDeleted: false }).select('name').lean();
+          if (folder) resourceName = folder.name;
+        }
+      } catch { /* skip */ }
+      return { ...share, resourceName };
+    })
+  );
+
+  return enriched;
+}
+
 module.exports = {
   createShareLink,
   resolveShare,
-  revokeShare
+  revokeShare,
+  listMyShares,
 };

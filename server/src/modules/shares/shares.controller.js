@@ -12,6 +12,15 @@ async function createShare(req, res, next) {
   }
 }
 
+async function listShares(req, res, next) {
+  try {
+    const shares = await sharesService.listMyShares(req.user.userId);
+    res.json({ success: true, data: shares });
+  } catch (error) {
+    next(error);
+  }
+}
+
 async function getShare(req, res, next) {
   try {
     const { token } = req.params;
@@ -34,6 +43,7 @@ async function revokeShare(req, res, next) {
 
 module.exports = {
   createShare,
+  listShares,
   getShare,
   revokeShare
 };
