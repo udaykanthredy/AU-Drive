@@ -13,14 +13,35 @@ export interface Share {
   updatedAt: string;
 }
 
-export interface SharedResourceResponse {
-  file?: any; // The file metadata with presignedUrl
-  folder?: any;
-  share: {
-    permission: string;
-    expiresAt: string | null;
+export interface SharedFileResponse {
+  file: {
+    _id: string;
+    originalName: string;
+    mimeType: string;
+    size: number;
+    presignedUrl: string;
+    [key: string]: any;
   };
+  share: { permission: string; expiresAt: string | null };
 }
+
+export interface SharedFolderFile {
+  _id: string;
+  originalName: string;
+  mimeType: string;
+  size: number;
+  presignedUrl: string;
+  [key: string]: any;
+}
+
+export interface SharedFolderResponse {
+  folder: { _id: string; name: string; [key: string]: any };
+  subfolders: { _id: string; name: string; [key: string]: any }[];
+  files: SharedFolderFile[];
+  share: { permission: string; expiresAt: string | null };
+}
+
+export type SharedResourceResponse = SharedFileResponse | SharedFolderResponse;
 
 export const sharesApi = {
   createShare: async (resourceId: string, resourceType: 'file' | 'folder' = 'file', expiresInDays: number | null = null) => {

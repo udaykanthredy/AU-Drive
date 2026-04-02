@@ -1,6 +1,7 @@
-import { Folder as FolderIcon, MoreVertical } from 'lucide-react';
+import { Folder as FolderIcon, MoreVertical, Share2 } from 'lucide-react';
 import { Folder } from '@/types';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
+import { useUIStore } from '@/store/uiStore';
 
 interface FolderCardProps {
   folder: Folder;
@@ -8,6 +9,7 @@ interface FolderCardProps {
 }
 
 export function FolderCard({ folder, onClick }: FolderCardProps) {
+  const { setShareFolder } = useUIStore();
   return (
     <div
       onClick={() => onClick?.(folder)}
@@ -35,6 +37,13 @@ export function FolderCard({ folder, onClick }: FolderCardProps) {
           >
             <DropdownMenu.Item className="px-3 py-2 text-sm text-gray-200 outline-none cursor-pointer hover:bg-gray-700 rounded-md">
               Rename
+            </DropdownMenu.Item>
+            <DropdownMenu.Item
+              className="px-3 py-2 text-sm text-gray-200 outline-none cursor-pointer hover:bg-gray-700 rounded-md flex items-center gap-2"
+              onSelect={() => setShareFolder(folder._id)}
+            >
+              <Share2 className="w-3.5 h-3.5" />
+              Share
             </DropdownMenu.Item>
             <DropdownMenu.Item className="px-3 py-2 text-sm text-gray-200 outline-none cursor-pointer hover:bg-gray-700 rounded-md">
               Move to...

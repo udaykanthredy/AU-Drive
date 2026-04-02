@@ -10,7 +10,7 @@ const apiClient = axios.create({
   baseURL: API_URL,
   withCredentials: true, // Send cookies (for httpOnly refresh token)
   headers: { 'Content-Type': 'application/json' },
-  timeout: 15_000,
+  timeout: 120_000, // 120s — needed for proxied file uploads via Express → R2
 });
 
 // ── Request interceptor: attach access token ─────────────────────────────────

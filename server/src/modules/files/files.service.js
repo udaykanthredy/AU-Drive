@@ -25,9 +25,10 @@ async function getUserFiles(userId, queryOptions = {}) {
 
   const query = { ownerId: userId, isDeleted };
 
-  // Only filter by folderId if we're not looking at starred or trash
-  if (isStarred === undefined && queryOptions.isDeleted === undefined) {
-    query.folderId = folderId;
+  // Apply folderId filter for normal drive browsing (not starred/trash views)
+  // isStarred view and trash view fetch across all folders, so we skip the filter there
+  if (isStarred === undefined) {
+    query.folderId = folderId ?? null;
   }
 
   if (isStarred !== undefined) {
