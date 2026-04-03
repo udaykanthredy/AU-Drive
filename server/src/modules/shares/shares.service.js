@@ -2,6 +2,7 @@
 
 const Share = require('../../models/Share.model');
 const File = require('../../models/File.model');
+const Folder = require('../../models/Folder.model');
 const { getPresignedDownloadUrl } = require('../../services/r2.service');
 
 async function createShareLink(userId, resourceId, resourceType, expiresInDays = null) {
@@ -9,8 +10,11 @@ async function createShareLink(userId, resourceId, resourceType, expiresInDays =
   if (resourceType === 'file') {
     const file = await File.findOne({ _id: resourceId, ownerId: userId, isDeleted: false });
     if (!file) throw Object.assign(new Error('File not found'), { statusCode: 404 });
+  } else if (resourceType === 'folder') {
+    const folder = await Folder.findOne({ _id: resourceId, ownerId: userId, isDeleted: false });
+    if (!folder) throw Object.assign(new Error('Folder not found'), { statusCode: 404 });
   } else {
-    throw Object.assign(new Error('Folder sharing not yet implemented'), { statusCode: 501 });
+    throw Object.assign(new Error('Invalid resource type'), { statusCode: 400 });
   }
 
   // Calculate expiresAt if provided
@@ -52,8 +56,38 @@ async function resolveShare(token) {
     delete file.r2Key;
 
     return { file: { ...file, presignedUrl }, share: { permission: share.permission, expiresAt: share.expiresAt } };
+
+  } else if (share.resourceType === 'folder') {
+    // Return folder metadata + direct children
+    const folder = await Folder.findOne({ _id: share.resourceId, isDeleted: false }).lean();
+    if (!folder) {
+      throw Object.assign(new Error('Shared folder no longer exists'), { statusCode: 404 });
+    }
+
+    // Fetch direct subfolders and files in parallel
+    const [subfolders, rawFiles] = await Promise.all([
+      Folder.find({ parentFolderId: share.resourceId, isDeleted: false }).lean(),
+      File.find({ folderId: share.resourceId, isDeleted: false }).select('+r2Key').lean(),
+    ]);
+
+    // Generate presigned download URLs for all files
+    const files = await Promise.all(
+      rawFiles.map(async (f) => {
+        const presignedUrl = await getPresignedDownloadUrl(f.r2Key);
+        const { r2Key, ...rest } = f;
+        return { ...rest, presignedUrl };
+      })
+    );
+
+    return {
+      folder,
+      subfolders,
+      files,
+      share: { permission: share.permission, expiresAt: share.expiresAt },
+    };
+
   } else {
-     throw Object.assign(new Error('Folder sharing not yet implemented'), { statusCode: 501 });
+    throw Object.assign(new Error('Unknown resource type'), { statusCode: 400 });
   }
 }
 
@@ -71,8 +105,34 @@ async function revokeShare(userId, shareId) {
   return share;
 }
 
+async function listMyShares(userId) {
+  const shares = await Share.find({ createdBy: userId, isRevoked: false })
+    .sort({ createdAt: -1 })
+    .lean();
+
+  // Attach basic resource name to each share for display
+  const enriched = await Promise.all(
+    shares.map(async (share) => {
+      let resourceName = 'Unknown';
+      try {
+        if (share.resourceType === 'file') {
+          const file = await File.findOne({ _id: share.resourceId, isDeleted: false }).select('originalName').lean();
+          if (file) resourceName = file.originalName;
+        } else if (share.resourceType === 'folder') {
+          const folder = await Folder.findOne({ _id: share.resourceId, isDeleted: false }).select('name').lean();
+          if (folder) resourceName = folder.name;
+        }
+      } catch { /* skip */ }
+      return { ...share, resourceName };
+    })
+  );
+
+  return enriched;
+}
+
 module.exports = {
   createShareLink,
   resolveShare,
-  revokeShare
+  revokeShare,
+  listMyShares,
 };

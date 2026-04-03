@@ -1,23 +1,23 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { sharesApi } from '@/services/shares.service';
-import { Download, Globe, FileText, Image as ImageIcon, File, Loader2 } from 'lucide-react';
+import { sharesApi, SharedFolderFile } from '@/services/shares.service';
+import { Download, Globe, FileText, Image as ImageIcon, File, Folder as FolderIcon, Loader2 } from 'lucide-react';
 import { formatBytes } from '@/components/drive/FileCard';
-import { notFound } from 'next/navigation';
+import { getFileIcon } from '@/components/drive/FileCard';
 
 export default function SharedFilePage({ params }: { params: { token: string } }) {
   const { data, isLoading, error } = useQuery({
     queryKey: ['share', params.token],
     queryFn: () => sharesApi.getShare(params.token),
-    retry: false, // Don't retry since 404s/410s mean it's invalid
+    retry: false,
   });
 
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-950 flex flex-col items-center justify-center text-brand-500">
         <Loader2 className="w-10 h-10 animate-spin mb-4" />
-        <p className="text-gray-400 font-medium">Loading securely shared file...</p>
+        <p className="text-gray-400 font-medium">Loading shared content...</p>
       </div>
     );
   }
@@ -41,7 +41,112 @@ export default function SharedFilePage({ params }: { params: { token: string } }
     );
   }
 
-  const fileWrapper = data.file;
+  // ── Folder Share View ───────────────────────────────────────────────────────
+  if ('folder' in data && data.folder) {
+    const { folder, subfolders, files, share } = data;
+    const totalItems = subfolders.length + files.length;
+
+    return (
+      <div className="min-h-screen flex flex-col bg-gray-950">
+        {/* Navbar */}
+        <nav className="h-16 border-b border-gray-800 bg-gray-900 flex items-center justify-between px-6 flex-shrink-0">
+          <div className="flex items-center gap-2">
+            <Globe className="w-6 h-6 text-brand-500" />
+            <span className="font-bold text-gray-200">Shared via AU-Drive</span>
+          </div>
+          <span className="text-xs text-gray-500 hidden sm:inline">View-only access</span>
+        </nav>
+
+        {/* Folder Meta Bar */}
+        <div className="bg-gray-900/50 border-b border-gray-800 px-6 py-4 flex items-center gap-4 flex-shrink-0">
+          <div className="bg-brand-500/10 p-3 rounded-lg flex-shrink-0">
+            <FolderIcon className="w-7 h-7 text-brand-400" />
+          </div>
+          <div className="overflow-hidden">
+            <h1 className="text-lg font-bold text-gray-200 truncate">{folder.name}</h1>
+            <p className="text-sm text-gray-500">
+              {totalItems === 0
+                ? 'Empty folder'
+                : `${totalItems} item${totalItems !== 1 ? 's' : ''}`}
+              {share.expiresAt && (
+                <span className="ml-2 text-amber-500/80">
+                  · Expires {new Date(share.expiresAt).toLocaleDateString()}
+                </span>
+              )}
+            </p>
+          </div>
+        </div>
+
+        {/* Content */}
+        <main className="flex-1 overflow-y-auto p-6">
+          {totalItems === 0 ? (
+            <div className="flex flex-col items-center justify-center min-h-[40vh] text-center">
+              <FolderIcon className="w-16 h-16 text-gray-700 mb-4" />
+              <p className="text-gray-500">This folder is empty.</p>
+            </div>
+          ) : (
+            <div className="max-w-4xl mx-auto space-y-8">
+
+              {/* Subfolders */}
+              {subfolders.length > 0 && (
+                <section>
+                  <h2 className="text-xs font-semibold text-gray-400 tracking-wider mb-3 uppercase">Folders</h2>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                    {subfolders.map((sf) => (
+                      <div
+                        key={sf._id}
+                        className="flex items-center gap-3 p-3.5 bg-gray-900 border border-gray-800 rounded-xl"
+                        title="Sub-folder browsing not available in shared links"
+                      >
+                        <FolderIcon className="w-5 h-5 text-gray-500 flex-shrink-0" />
+                        <span className="text-sm font-medium text-gray-300 truncate">{sf.name}</span>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              )}
+
+              {/* Files */}
+              {files.length > 0 && (
+                <section>
+                  <h2 className="text-xs font-semibold text-gray-400 tracking-wider mb-3 uppercase">Files</h2>
+                  <div className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden divide-y divide-gray-800">
+                    {files.map((file: SharedFolderFile) => (
+                      <div key={file._id} className="flex items-center gap-4 px-4 py-3 hover:bg-gray-800/60 transition-colors group">
+                        <div className="flex-shrink-0">
+                          {getFileIcon(file.mimeType, 'w-5 h-5 text-brand-400')}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium text-gray-200 truncate">{file.originalName}</p>
+                          <p className="text-xs text-gray-500">{formatBytes(file.size)} · {file.mimeType}</p>
+                        </div>
+                        <a
+                          href={file.presignedUrl}
+                          download={file.originalName}
+                          className="flex-shrink-0 flex items-center gap-1.5 text-xs text-brand-400 hover:text-brand-300 opacity-0 group-hover:opacity-100 transition-all bg-brand-500/10 hover:bg-brand-500/20 px-3 py-1.5 rounded-lg"
+                        >
+                          <Download className="w-3.5 h-3.5" />
+                          Download
+                        </a>
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              )}
+            </div>
+          )}
+        </main>
+
+        {/* Footer */}
+        <footer className="border-t border-gray-800 py-3 text-center text-xs text-gray-600">
+          Shared folder · View-only · Powered by AU-Drive
+        </footer>
+      </div>
+    );
+  }
+
+  // ── File Share View (existing — untouched logic) ────────────────────────────
+  const fileWrapper = (data as any).file;
 
   const getIcon = (mimeType: string) => {
     if (mimeType.startsWith('image/')) return <ImageIcon className="w-8 h-8 text-brand-400" />;

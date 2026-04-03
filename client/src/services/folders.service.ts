@@ -10,6 +10,9 @@ export const foldersApi = {
   updateFolder: (id: string, name: string) => 
     apiClient.patch(`/folders/${id}`, { name }),
 
+  starFolder: (id: string, isStarred: boolean) =>
+    apiClient.patch(`/folders/${id}/star`, { isStarred }),
+
   deleteFolder: (id: string) => 
     apiClient.delete(`/folders/${id}`),
 };

@@ -28,6 +28,8 @@ export interface File {
   r2Key: string;
   isStarred: boolean;
   isInTrash: boolean;
+  isDeleted: boolean;
+  deletedAt: string | null;
   processingStatus: 'pending' | 'processing' | 'done' | 'error';
   extractedText?: string;
   summary?: string;

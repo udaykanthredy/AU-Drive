@@ -50,6 +50,18 @@ export function FileCard({ file, onDoubleClicked }: FileCardProps) {
     setShareFile(file._id);
   };
 
+  const handleStar = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    try {
+      await filesApi.updateFile(file._id, { isStarred: !file.isStarred });
+      queryClient.invalidateQueries({ queryKey: ['files', file.folderId] });
+      queryClient.invalidateQueries({ queryKey: ['files-starred'] });
+      toast.success(file.isStarred ? 'Removed from starred' : 'Added to starred');
+    } catch {
+      toast.error('Failed to update star');
+    }
+  };
+
   return (
     <div
       onDoubleClick={() => onDoubleClicked?.(file)}
@@ -95,6 +107,13 @@ export function FileCard({ file, onDoubleClicked }: FileCardProps) {
                 className="px-3 py-2 text-sm text-gray-200 outline-none cursor-pointer hover:bg-gray-700 rounded-md"
               >
                 Preview
+              </DropdownMenu.Item>
+              <DropdownMenu.Item 
+                onClick={handleStar}
+                className="px-3 py-2 text-sm text-gray-200 outline-none cursor-pointer hover:bg-gray-700 rounded-md flex items-center gap-2"
+              >
+                <Star className={`w-3.5 h-3.5 ${file.isStarred ? 'text-yellow-400 fill-current' : ''}`} />
+                {file.isStarred ? 'Unstar' : 'Star'}
               </DropdownMenu.Item>
               <DropdownMenu.Item 
                 onClick={handleShare}
