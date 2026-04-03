@@ -11,6 +11,7 @@ const router = Router();
  * DELETE /api/shares/:id   → revoke share link (auth required)
  */
 router.post('/', verifyToken, sharesController.createShare);
+router.get('/', verifyToken, sharesController.listShares);  // List MY shares
 
 // Public route — validate token, check expiry, return presigned URL
 router.get('/:token', optionalToken, sharesController.getShare);

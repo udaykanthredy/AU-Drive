@@ -1,6 +1,10 @@
-import { Folder as FolderIcon, MoreVertical } from 'lucide-react';
+import { Folder as FolderIcon, MoreVertical, Share2, Star } from 'lucide-react';
 import { Folder } from '@/types';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
+import { useUIStore } from '@/store/uiStore';
+import { foldersApi } from '@/services/folders.service';
+import { useQueryClient } from '@tanstack/react-query';
+import toast from 'react-hot-toast';
 
 interface FolderCardProps {
   folder: Folder;
@@ -8,6 +12,18 @@ interface FolderCardProps {
 }
 
 export function FolderCard({ folder, onClick }: FolderCardProps) {
+  const { setShareFolder } = useUIStore();
+  const queryClient = useQueryClient();
+
+  const handleStar = async () => {
+    try {
+      await foldersApi.starFolder(folder._id, !folder.isStarred);
+      queryClient.invalidateQueries({ queryKey: ['folders', folder.parentId ?? null] });
+      toast.success(folder.isStarred ? 'Removed from starred' : 'Added to starred');
+    } catch {
+      toast.error('Failed to update star');
+    }
+  };
   return (
     <div
       onClick={() => onClick?.(folder)}
@@ -16,6 +32,7 @@ export function FolderCard({ folder, onClick }: FolderCardProps) {
       <div className="flex items-center gap-3 truncate">
         <FolderIcon className="w-5 h-5 text-gray-500 flex-shrink-0 group-hover:text-brand-400 transition-colors" />
         <span className="text-sm font-medium text-gray-200 truncate">{folder.name}</span>
+        {folder.isStarred && <Star className="w-3.5 h-3.5 text-yellow-400 fill-current flex-shrink-0" />}
       </div>
 
       <DropdownMenu.Root>
@@ -35,6 +52,20 @@ export function FolderCard({ folder, onClick }: FolderCardProps) {
           >
             <DropdownMenu.Item className="px-3 py-2 text-sm text-gray-200 outline-none cursor-pointer hover:bg-gray-700 rounded-md">
               Rename
+            </DropdownMenu.Item>
+            <DropdownMenu.Item
+              className="px-3 py-2 text-sm text-gray-200 outline-none cursor-pointer hover:bg-gray-700 rounded-md flex items-center gap-2"
+              onSelect={handleStar}
+            >
+              <Star className={`w-3.5 h-3.5 ${folder.isStarred ? 'text-yellow-400 fill-current' : ''}`} />
+              {folder.isStarred ? 'Unstar' : 'Star'}
+            </DropdownMenu.Item>
+            <DropdownMenu.Item
+              className="px-3 py-2 text-sm text-gray-200 outline-none cursor-pointer hover:bg-gray-700 rounded-md flex items-center gap-2"
+              onSelect={() => setShareFolder(folder._id)}
+            >
+              <Share2 className="w-3.5 h-3.5" />
+              Share
             </DropdownMenu.Item>
             <DropdownMenu.Item className="px-3 py-2 text-sm text-gray-200 outline-none cursor-pointer hover:bg-gray-700 rounded-md">
               Move to...

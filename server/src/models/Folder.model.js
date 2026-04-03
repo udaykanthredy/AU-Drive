@@ -28,6 +28,10 @@ const folderSchema = new Schema(
       type: Date,
       default: null,
     },
+    isStarred: {
+      type: Boolean,
+      default: false,
+    },
     // TODO: Phase 3 — Add color/icon customization
     // color: { type: String },
     // icon: { type: String },
@@ -38,5 +42,6 @@ const folderSchema = new Schema(
 // Indexes
 folderSchema.index({ ownerId: 1, parentFolderId: 1, isDeleted: 1 });
 folderSchema.index({ ownerId: 1, isDeleted: 1 });
+folderSchema.index({ ownerId: 1, isStarred: 1, isDeleted: 1 });
 
 module.exports = model('Folder', folderSchema);

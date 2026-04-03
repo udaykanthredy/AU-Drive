@@ -13,8 +13,9 @@ import {
   Upload,
   FolderPlus
 } from 'lucide-react';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { clsx } from 'clsx';
+import { NewFolderModal } from '@/components/drive/NewFolderModal';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { useAuthStore } from '@/store/authStore';
 import { useFileUploader } from '@/hooks/useFileUploader';
@@ -43,7 +44,8 @@ export function Sidebar() {
   
   const { uploadFiles } = useFileUploader();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  
+  const [newFolderOpen, setNewFolderOpen] = useState(false);
+
   const currentFolderId = searchParams?.get('folder');
 
   const storageUsed = user?.storageUsed ?? 0;
@@ -88,7 +90,10 @@ export function Sidebar() {
               align="start"
               sideOffset={8}
             >
-              <DropdownMenu.Item className="flex items-center gap-2 px-3 py-2 outline-none cursor-pointer hover:bg-gray-700 rounded-md text-sm text-gray-200">
+              <DropdownMenu.Item
+                onSelect={() => setNewFolderOpen(true)}
+                className="flex items-center gap-2 px-3 py-2 outline-none cursor-pointer hover:bg-gray-700 rounded-md text-sm text-gray-200"
+              >
                 <FolderPlus className="w-4 h-4 text-gray-400" />
                 New Folder
               </DropdownMenu.Item>
@@ -151,6 +156,12 @@ export function Sidebar() {
           {formatBytes(storageUsed)} of {formatBytes(storageQuota)} used
         </div>
       </div>
+
+      <NewFolderModal
+        open={newFolderOpen}
+        onClose={() => setNewFolderOpen(false)}
+        parentFolderId={currentFolderId}
+      />
     </aside>
   );
 }
