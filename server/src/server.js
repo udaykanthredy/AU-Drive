@@ -22,6 +22,10 @@ async function startServer() {
     try {
       await connectRedis();
       logger.info('✅ Redis connected');
+      
+      // Start background workers
+      const { startFileWorker } = require('./jobs/file.processor');
+      startFileWorker();
     } catch (err) {
       logger.warn('⚠️ Redis connection failed (probably not running locally) — skipping for now');
     }

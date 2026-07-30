@@ -41,10 +41,27 @@ apiClient.interceptors.response.use(
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       try {
-        // TODO Phase 1: Call refresh endpoint and update token in store
-        // await apiClient.post('/auth/refresh');
-        // return apiClient(originalRequest);
-      } catch {
+        // Call refresh endpoint directly using axios to bypass interceptor
+        const res = await axios.post(`${API_URL}/auth/refresh`, {}, { withCredentials: true });
+        const newToken = res.data?.data?.accessToken;
+        
+        if (newToken) {
+          // Update the token in Zustand store via localStorage
+          try {
+            const raw = localStorage.getItem('au-drive-auth');
+            if (raw) {
+              const state = JSON.parse(raw);
+              state.state.accessToken = newToken;
+              localStorage.setItem('au-drive-auth', JSON.stringify(state));
+            }
+          } catch (e) {
+            console.error('Failed to update token in local storage', e);
+          }
+          
+          originalRequest.headers.Authorization = `Bearer ${newToken}`;
+          return apiClient(originalRequest);
+        }
+      } catch (refreshError) {
         // Refresh failed — redirect to login
         if (typeof window !== 'undefined') window.location.href = '/login';
       }

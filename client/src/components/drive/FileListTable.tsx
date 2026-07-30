@@ -1,5 +1,5 @@
 import { format } from 'date-fns';
-import { MoreVertical, Star, Folder as FolderIcon } from 'lucide-react';
+import { MoreVertical, Star, Folder as FolderIcon, ShieldAlert, Loader2, AlertCircle } from 'lucide-react';
 import type { File as FileModel, Folder } from '@/types';
 import { formatBytes, getFileIcon } from './FileCard';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
@@ -97,7 +97,7 @@ export function FileListTable({ files, folders, onFolderClick, onFileDoubleClick
         {files.map((file) => (
           <div
             key={`file-${file._id}`}
-            onDoubleClick={() => onFileDoubleClick?.(file)}
+            onClick={() => onFileDoubleClick?.(file)}
             className="grid grid-cols-[minmax(200px,1fr)_120px_150px_100px_40px] items-center px-3 py-3 rounded-lg hover:bg-gray-800/60 cursor-pointer group transition-colors"
           >
             <div className="flex items-center gap-3 truncate pr-4">
@@ -107,7 +107,16 @@ export function FileListTable({ files, folders, onFolderClick, onFileDoubleClick
                   <Star className="absolute -bottom-1 -right-1 w-3 h-3 text-yellow-500 fill-current bg-gray-900 rounded-full" />
                 )}
               </div>
-              <span className="text-sm font-medium text-gray-200 truncate">{file.originalName}</span>
+              <span className="text-sm font-medium text-gray-200 truncate">{file.name}</span>
+              {file.containsPII && (
+                <ShieldAlert className="w-4 h-4 text-red-500 flex-shrink-0" title="Contains sensitive PII" />
+              )}
+              {file.processingStatus === 'processing' && (
+                <Loader2 className="w-4 h-4 animate-spin text-brand-500 flex-shrink-0" title="AI Processing..." />
+              )}
+              {file.processingStatus === 'failed' && (
+                <AlertCircle className="w-4 h-4 text-red-500 flex-shrink-0" title="Processing failed" />
+              )}
             </div>
             <div className="text-sm text-gray-400 truncate pr-4">me</div>
             <div className="text-sm text-gray-400 truncate">

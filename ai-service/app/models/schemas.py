@@ -4,6 +4,20 @@ from pydantic import BaseModel, Field
 from typing import Optional
 
 
+# ── Text Extraction ───────────────────────────────────────────────────────────
+class ExtractRequest(BaseModel):
+    file_id: str = Field(..., description="MongoDB File document ID")
+    file_bytes: str = Field(..., description="Base64-encoded file content")
+    mime_type: str = Field(..., description="MIME type of the file (e.g. application/pdf)")
+
+
+class ExtractResponse(BaseModel):
+    file_id: str
+    text: str
+    char_count: int
+    mime_type: str
+
+
 # ── Embedding ─────────────────────────────────────────────────────────────────
 class EmbedRequest(BaseModel):
     file_id: str = Field(..., description="MongoDB File document ID")
@@ -27,6 +41,7 @@ class SummarizeResponse(BaseModel):
     file_id: str
     summary: str
     tags: list[str]
+    contains_pii: bool
 
 
 # ── Search ────────────────────────────────────────────────────────────────────

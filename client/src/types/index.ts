@@ -29,6 +29,7 @@ export interface File {
   isStarred: boolean;
   isInTrash: boolean;
   processingStatus: 'pending' | 'processing' | 'done' | 'error';
+  containsPII?: boolean;
   extractedText?: string;
   summary?: string;
   tags: string[];

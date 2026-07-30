@@ -25,6 +25,7 @@ class Settings(BaseSettings):
     EMBEDDING_PROVIDER: str = "local"
     EMBEDDING_MODEL: str = "all-MiniLM-L6-v2"
     OPENAI_API_KEY: str = ""
+    OPENAI_API_BASE: str = ""
     GEMINI_API_KEY: str = ""
 
     # ── LLM Config ────────────────────────────────────────────────────────────

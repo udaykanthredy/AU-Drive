@@ -13,6 +13,7 @@ import { useFileUploader } from '@/hooks/useFileUploader';
 import { UploadProgressPanel } from '@/components/drive/UploadProgressPanel';
 import { FilePreviewModal } from '@/components/drive/FilePreviewModal';
 import { ShareModal } from '@/components/drive/ShareModal';
+import { ChatPanel } from '@/components/drive/ChatPanel';
 import type { Folder, File as FileModel } from '@/types';
 
 // TODO: Fetch real breadcrumb path array from backend based on current folderId
@@ -139,6 +140,7 @@ export default function DashboardPage() {
       <UploadProgressPanel />
       <FilePreviewModal />
       <ShareModal />
+      <ChatPanel />
     </div>
   );
 }

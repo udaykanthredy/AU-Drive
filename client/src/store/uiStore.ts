@@ -5,9 +5,11 @@ interface UIState {
   viewMode: 'grid' | 'list';
   previewFileId: string | null;
   shareFileId: string | null;
+  isChatOpen: boolean;
   setViewMode: (mode: 'grid' | 'list') => void;
   setPreviewFile: (fileId: string | null) => void;
   setShareFile: (fileId: string | null) => void;
+  setIsChatOpen: (isOpen: boolean) => void;
 }
 
 /**
@@ -20,10 +22,12 @@ export const useUIStore = create<UIState>()(
       viewMode: 'grid',
       previewFileId: null,
       shareFileId: null,
+      isChatOpen: false,
 
       setViewMode: (viewMode) => set({ viewMode }),
       setPreviewFile: (previewFileId) => set({ previewFileId }),
       setShareFile: (shareFileId) => set({ shareFileId }),
+      setIsChatOpen: (isChatOpen) => set({ isChatOpen }),
     }),
     {
       name: 'au-drive-ui-prefs',

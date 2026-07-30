@@ -59,6 +59,10 @@ const fileSchema = new Schema(
       type: Date,
       default: null,
     },
+    contentHash: {
+      type: String,
+      index: true,
+    },
     // ── AI Fields (populated by background workers in Phase 2) ──────────────
     textContent: {
       type: String,
@@ -84,6 +88,7 @@ const fileSchema = new Schema(
       enum: ['pending', 'processing', 'done', 'failed'],
       default: 'pending',
     },
+    containsPII: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

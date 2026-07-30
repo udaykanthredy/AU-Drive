@@ -27,7 +27,7 @@ const embeddingSchema = new Schema(
       required: true,
     },
     vector: {
-      type: [Number], // Float array — 768 dims for all-MiniLM, 1536 for OpenAI
+      type: [Number], // Float array — 384 dims for all-MiniLM-L6-v2 | 1536 for OpenAI text-embedding-3-small
       required: true,
       // TODO: Add validation for vector dimension consistency
     },

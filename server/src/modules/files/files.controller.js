@@ -4,6 +4,7 @@ const filesService = require('./files.service');
 const { getPresignedUploadUrl, uploadToR2 } = require('../../services/r2.service');
 const { v4: uuidv4 } = require('uuid');
 const catchAsync = require('../../utils/catchAsync');
+const { enqueueFileProcessing } = require('../../queues/file.queue');
 
 const generateUploadUrl = catchAsync(async (req, res) => {
   const { originalName, mimeType } = req.body;
@@ -41,8 +42,14 @@ const saveMetadata = catchAsync(async (req, res) => {
     folderId: folderId || null,
   });
 
+  // Enqueue AI processing job (Phase 4)
+  await enqueueFileProcessing(newFile._id, newFile.r2Key);
+
   res.status(201).json({ success: true, data: newFile });
 });
+
+const crypto = require('crypto');
+const File = require('../../models/File.model');
 
 /**
  * Proxied upload: Browser → Express → R2 (bypasses CORS entirely)
@@ -54,6 +61,18 @@ const uploadFile = catchAsync(async (req, res) => {
 
   if (!file) {
     return res.status(400).json({ success: false, message: 'No file provided' });
+  }
+
+  // Phase 5: Duplicate Detection
+  const contentHash = crypto.createHash('sha256').update(file.buffer).digest('hex');
+  const duplicate = await File.findOne({ ownerId: userId, contentHash, isDeleted: false });
+  
+  if (duplicate) {
+    return res.status(409).json({ 
+      success: false, 
+      message: 'This exact file already exists in your drive.',
+      data: duplicate
+    });
   }
 
   const r2Key = `users/${userId}/files/${uuidv4()}-${file.originalname}`;
@@ -81,8 +100,12 @@ const uploadFile = catchAsync(async (req, res) => {
     size: file.size,
     mimeType: file.mimetype,
     r2Key,
+    contentHash,
     folderId: req.body.folderId || null,
   });
+
+  // Enqueue AI processing job (Phase 4)
+  await enqueueFileProcessing(newFile._id, newFile.r2Key);
 
   res.status(201).json({ success: true, data: newFile });
 });

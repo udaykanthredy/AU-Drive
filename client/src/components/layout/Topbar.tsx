@@ -1,6 +1,6 @@
 'use client';
 
-import { Search, LogOut, User, LayoutGrid, List } from 'lucide-react';
+import { Search, LogOut, User, LayoutGrid, List, Sparkles } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import { useAuthStore } from '@/store/authStore';
@@ -8,6 +8,7 @@ import { useUIStore } from '@/store/uiStore';
 import { authApi } from '@/services/auth.service';
 import { clsx } from 'clsx';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
+import { SearchBar } from '@/components/drive/SearchBar';
 
 export function Topbar() {
   const router = useRouter();
@@ -31,22 +32,21 @@ export function Topbar() {
     <header className="h-16 border-b border-gray-800 bg-gray-900 flex items-center justify-between px-6 flex-shrink-0 z-10 w-full shadow-sm">
       {/* Search Input */}
       <div className="flex-1 flex max-w-2xl px-2">
-        <div className="relative w-full">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <Search className="h-5 w-5 text-gray-500" />
-          </div>
-          <input
-            type="text"
-            className="block w-full pl-10 pr-3 py-2.5 border border-transparent rounded-2xl text-gray-200 placeholder-gray-500 bg-gray-800 focus:outline-none focus:bg-white focus:text-gray-900 focus:border-transparent focus:ring-0 sm:text-sm transition-all focus:placeholder-gray-400"
-            placeholder="Search in Drive..."
-          />
-        </div>
+        <SearchBar />
       </div>
 
       {/* Right side controls */}
       <div className="flex items-center gap-3">
         {/* View mode toggles */}
         <div className="hidden sm:flex items-center bg-gray-800/50 p-1 rounded-lg border border-gray-800 mr-2">
+          <button
+            onClick={() => useUIStore.getState().setIsChatOpen(true)}
+            className="p-1.5 rounded-md text-brand-400 hover:text-brand-300 hover:bg-gray-700 transition-colors mr-2"
+            title="Open Chat"
+          >
+            <Sparkles className="w-4 h-4" />
+          </button>
+          
           <button
             onClick={() => setViewMode('list')}
             className={clsx(

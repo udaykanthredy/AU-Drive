@@ -8,7 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 import os
 
-from app.routers import embed, summarize, search, chat
+from app.routers import embed, summarize, search, chat, extract
 from app.config import settings
 
 
@@ -44,6 +44,7 @@ app.add_middleware(
 )
 
 # ── Routers ───────────────────────────────────────────────────────────────────
+app.include_router(extract.router, prefix="/extract", tags=["Extraction"])
 app.include_router(embed.router, prefix="/embed", tags=["Embeddings"])
 app.include_router(summarize.router, prefix="/summarize", tags=["Summarization"])
 app.include_router(search.router, prefix="/search", tags=["Search"])

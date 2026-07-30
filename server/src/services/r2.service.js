@@ -57,6 +57,7 @@ async function getPresignedDownloadUrl(r2Key) {
   const command = new GetObjectCommand({
     Bucket: BUCKET,
     Key: r2Key,
+    ResponseContentDisposition: 'inline',
   });
 
   const presignedUrl = await getSignedUrl(getR2Client(), command, {
@@ -102,9 +103,28 @@ async function uploadToR2(r2Key, body, mimeType) {
   logger.info(`R2 object uploaded (proxied): ${r2Key}`);
 }
 
+/**
+ * Download a file buffer directly from R2.
+ * Used by the background processor to fetch file contents.
+ *
+ * @param {string} r2Key
+ * @returns {Promise<Buffer>}
+ */
+async function downloadFromR2(r2Key) {
+  const command = new GetObjectCommand({
+    Bucket: BUCKET,
+    Key: r2Key,
+  });
+
+  const response = await getR2Client().send(command);
+  const byteArray = await response.Body.transformToByteArray();
+  return Buffer.from(byteArray);
+}
+
 module.exports = {
   getPresignedUploadUrl,
   getPresignedDownloadUrl,
   deleteObject,
   uploadToR2,
+  downloadFromR2,
 };

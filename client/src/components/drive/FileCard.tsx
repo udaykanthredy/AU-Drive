@@ -1,4 +1,4 @@
-import { FileText, Image as ImageIcon, File, MoreVertical, Star } from 'lucide-react';
+import { FileText, Image as ImageIcon, File, MoreVertical, Star, ShieldAlert, AlertCircle, Loader2 } from 'lucide-react';
 import type { File as FileModel } from '@/types';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { useQueryClient } from '@tanstack/react-query';
@@ -52,14 +52,21 @@ export function FileCard({ file, onDoubleClicked }: FileCardProps) {
 
   return (
     <div
-      onDoubleClick={() => onDoubleClicked?.(file)}
+      onClick={() => onDoubleClicked?.(file)}
       className="flex flex-col bg-gray-900 border border-gray-800 rounded-xl hover:bg-gray-800 hover:border-gray-700 cursor-pointer transition-all group shadow-sm hover:shadow-md h-full overflow-hidden"
     >
       {/* Thumbnail area (Placeholder for Phase 2 images) */}
       <div className="h-32 bg-gray-950 flex items-center justify-center border-b border-gray-800 relative">
+        <div className="absolute top-2 right-2 flex flex-col gap-1 items-end z-10">
+          {file.containsPII && (
+            <div className="bg-red-500 text-white rounded-full p-1 shadow-md" title="Contains sensitive PII">
+              <ShieldAlert className="w-3.5 h-3.5" />
+            </div>
+          )}
+        </div>
         {getFileIcon(file.mimeType, "w-12 h-12 text-gray-700")}
         {file.isStarred && (
-          <Star className="absolute top-2 right-2 w-4 h-4 text-yellow-500 fill-current" />
+          <Star className="absolute top-2 left-2 w-4 h-4 text-yellow-500 fill-current" />
         )}
       </div>
 
@@ -68,7 +75,7 @@ export function FileCard({ file, onDoubleClicked }: FileCardProps) {
         <div className="overflow-hidden">
           <div className="flex items-center gap-2 mb-1">
             {getFileIcon(file.mimeType, "w-4 h-4 flex-shrink-0 text-brand-400")}
-            <span className="text-sm font-medium text-gray-200 truncate">{file.originalName}</span>
+            <span className="text-sm font-medium text-gray-200 truncate">{file.name}</span>
           </div>
           <span className="text-xs text-gray-500 block">
             {formatBytes(file.size)}
