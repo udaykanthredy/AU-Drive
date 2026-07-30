@@ -29,52 +29,51 @@ export function Topbar() {
   };
 
   return (
-    <header className="h-[72px] border-b border-white/5 bg-gray-950/40 backdrop-blur-xl flex items-center justify-between px-8 flex-shrink-0 z-10 w-full relative before:absolute before:inset-0 before:bg-glass before:pointer-events-none">
-      {/* Content needs relative z-10 to sit above the before pseudo-element background */}
+    <header className="h-[72px] border-b-4 border-black bg-white flex items-center justify-between px-8 flex-shrink-0 z-10 w-full relative">
       {/* Search Input */}
       <div className="flex-1 flex max-w-2xl px-2 relative z-10">
         <SearchBar />
       </div>
 
       {/* Right side controls */}
-      <div className="flex items-center gap-3 relative z-10">
+      <div className="flex items-center gap-4 relative z-10">
         {/* View mode toggles */}
-        <div className="hidden sm:flex items-center bg-gray-800/50 p-1 rounded-lg border border-gray-800 mr-2">
+        <div className="hidden sm:flex items-center bg-neo-bg p-1 border-2 border-black mr-2 shadow-neo-sm">
           <button
-            onClick={() => useUIStore.getState().setIsChatOpen(true)}
-            className="p-1.5 rounded-md text-brand-400 hover:text-brand-300 hover:bg-gray-700 transition-colors mr-2"
+            onClick={() => useUIStore.getState().setIsChatOpen(!useUIStore.getState().isChatOpen)}
+            className="p-2 border-2 border-transparent hover:border-black hover:bg-neo-blue text-black font-bold transition-all mr-2"
             title="Open Chat"
           >
-            <Sparkles className="w-4 h-4" />
+            <Sparkles className="w-5 h-5" />
           </button>
           
           <button
             onClick={() => setViewMode('list')}
             className={clsx(
-              "p-1.5 rounded-md transition-colors",
-              viewMode === 'list' ? 'bg-gray-700 text-white shadow-sm' : 'text-gray-500 hover:text-gray-300'
+              "p-2 transition-all border-2 font-bold",
+              viewMode === 'list' ? 'bg-brand-500 text-black border-black shadow-neo-sm' : 'text-black border-transparent hover:border-black'
             )}
             title="List view"
           >
-            <List className="w-4 h-4" />
+            <List className="w-5 h-5" />
           </button>
           <button
             onClick={() => setViewMode('grid')}
             className={clsx(
-              "p-1.5 rounded-md transition-colors",
-              viewMode === 'grid' ? 'bg-gray-700 text-white shadow-sm' : 'text-gray-500 hover:text-gray-300'
+              "p-2 transition-all border-2 font-bold",
+              viewMode === 'grid' ? 'bg-brand-500 text-black border-black shadow-neo-sm' : 'text-black border-transparent hover:border-black'
             )}
             title="Grid view"
           >
-            <LayoutGrid className="w-4 h-4" />
+            <LayoutGrid className="w-5 h-5" />
           </button>
         </div>
 
         {/* User Dropdown */}
         <DropdownMenu.Root>
           <DropdownMenu.Trigger asChild>
-            <button className="flex items-center justify-center h-8 w-8 rounded-full bg-brand-600 text-sm font-medium text-white ring-2 ring-gray-900 hover:ring-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-brand-500 transition-all">
-              {user?.name?.[0]?.toUpperCase() ?? <User className="w-4 h-4" />}
+            <button className="flex items-center justify-center h-10 w-10 rounded-full bg-neo-pink border-2 border-black shadow-neo-sm text-sm font-bold text-black hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all outline-none">
+              {user?.name?.[0]?.toUpperCase() ?? <User className="w-5 h-5" />}
             </button>
           </DropdownMenu.Trigger>
 

@@ -58,12 +58,12 @@ export function SearchBar() {
   return (
     <div ref={wrapperRef} className="relative flex-1 max-w-2xl mr-6">
       <div className="relative group">
-        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-          <Search className="h-5 w-5 text-gray-400 group-focus-within:text-brand-500 transition-colors" />
+        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none z-10">
+          <Search className="h-5 w-5 text-black transition-colors" />
         </div>
         <input
           type="text"
-          className="block w-full pl-10 pr-10 py-2.5 border border-gray-700 rounded-xl leading-5 bg-gray-900/50 text-gray-100 placeholder-gray-400 focus:outline-none focus:bg-gray-900 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all sm:text-sm"
+          className="block w-full pl-12 pr-10 py-3 border-2 border-black rounded-none leading-5 bg-neo-bg text-black placeholder-gray-500 focus:outline-none focus:shadow-neo focus:-translate-y-[2px] focus:-translate-x-[2px] transition-all font-bold sm:text-sm"
           placeholder="Semantic search (e.g. 'documents about AI integration')..."
           value={query}
           onChange={(e) => {
@@ -74,42 +74,42 @@ export function SearchBar() {
             if (query) setIsOpen(true);
           }}
         />
-        <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+        <div className="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none z-10">
           {isSearching ? (
-            <Loader2 className="h-4 w-4 text-brand-500 animate-spin" />
+            <Loader2 className="h-5 w-5 text-brand-500 animate-spin" />
           ) : (
-            <Sparkles className="h-4 w-4 text-gray-500" />
+            <Sparkles className="h-5 w-5 text-black" />
           )}
         </div>
       </div>
 
       {isOpen && (query || results.length > 0) && (
-        <div className="absolute z-50 mt-2 w-full bg-gray-900 border border-gray-800 rounded-xl shadow-2xl overflow-hidden backdrop-blur-xl">
+        <div className="absolute z-50 mt-2 w-full bg-white border-4 border-black shadow-neo overflow-hidden">
           {results.length > 0 ? (
             <ul className="max-h-96 overflow-y-auto py-2">
               {results.map((result) => (
                 <li
                   key={result.file_id}
-                  className="px-4 py-3 hover:bg-gray-800 cursor-pointer border-b border-gray-800/50 last:border-0 transition-colors"
+                  className="px-4 py-3 hover:bg-neo-yellow cursor-pointer border-b-2 border-black last:border-0 transition-colors"
                   onClick={() => handleResultClick(result.file_id)}
                 >
                   <div className="flex items-center justify-between mb-1">
-                    <div className="flex items-center text-sm font-medium text-gray-200">
-                      <FileText className="w-4 h-4 mr-2 text-brand-400" />
+                    <div className="flex items-center text-sm font-bold text-black">
+                      <FileText className="w-4 h-4 mr-2 text-black" />
                       {result.file_name}
                     </div>
-                    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-brand-500/10 text-brand-400">
+                    <span className="inline-flex items-center px-2 py-0.5 border-2 border-black text-xs font-bold bg-brand-500 text-black">
                       {Math.round(result.score * 100)}% match
                     </span>
                   </div>
-                  <p className="text-xs text-gray-400 line-clamp-2 pl-6 italic">
+                  <p className="text-xs text-black line-clamp-2 pl-6 font-medium">
                     "...{result.snippet}..."
                   </p>
                 </li>
               ))}
             </ul>
           ) : !isSearching && query ? (
-            <div className="p-4 text-center text-sm text-gray-400">
+            <div className="p-4 text-center text-sm text-black font-bold border-2 border-transparent">
               No semantic matches found.
             </div>
           ) : null}

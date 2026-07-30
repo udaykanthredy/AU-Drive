@@ -1,4 +1,3 @@
-/** @type {import('tailwindcss').Config} */
 const colors = require('tailwindcss/colors');
 
 module.exports = {
@@ -11,29 +10,34 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // Map all 'gray' classes to the 'stone' palette for a warm, luxury feel
-        gray: colors.stone,
+        // Bright pop colors for neubrutalism
         brand: {
-          50: '#fefce8',
-          100: '#fef9c3',
-          200: '#fef08a',
-          300: '#fde047',
-          400: '#facc15',
-          500: '#eab308',
-          600: '#ca8a04', // The accent CTA gold from the design system
-          700: '#a16207',
-          800: '#854d0e',
-          900: '#713f12',
-          950: '#422006',
+          50: '#f0fdf4',
+          100: '#dcfce7',
+          200: '#bbf7d0',
+          300: '#86efac',
+          400: '#4ade80',
+          500: '#22c55e', // Vibrant Green CTA
+          600: '#16a34a',
+          700: '#15803d',
+          800: '#166534',
+          900: '#14532d',
         },
+        neo: {
+          bg: '#fff9f0', // Pastel cream background
+          blue: '#93C5FD',
+          yellow: '#FDE047',
+          pink: '#F9A8D4',
+        }
       },
       fontFamily: {
         sans: ['var(--font-jost)', 'system-ui', 'sans-serif'],
       },
-      backgroundImage: {
-        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'glass': 'linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%)',
-      },
+      boxShadow: {
+        'neo': '4px 4px 0px 0px rgba(0,0,0,1)',
+        'neo-lg': '8px 8px 0px 0px rgba(0,0,0,1)',
+        'neo-sm': '2px 2px 0px 0px rgba(0,0,0,1)',
+      }
     },
   },
   plugins: [],

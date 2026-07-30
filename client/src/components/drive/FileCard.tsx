@@ -53,10 +53,10 @@ export function FileCard({ file, onDoubleClicked }: FileCardProps) {
   return (
     <div
       onClick={() => onDoubleClicked?.(file)}
-      className="flex flex-col bg-gray-900/40 backdrop-blur-md border border-white/5 rounded-2xl hover:bg-gray-800/60 hover:border-white/10 cursor-pointer transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-2xl hover:shadow-brand-500/10 group overflow-hidden relative before:absolute before:inset-0 before:bg-glass before:opacity-0 hover:before:opacity-100 before:transition-opacity before:pointer-events-none"
+      className="flex flex-col bg-white border-2 border-black shadow-neo hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-none cursor-pointer transition-all duration-200 group overflow-hidden relative"
     >
       {/* Thumbnail area */}
-      <div className="h-32 bg-gray-950/40 flex items-center justify-center border-b border-white/5 relative z-10">
+      <div className="h-32 bg-neo-bg flex items-center justify-center border-b-2 border-black relative z-10">
         <div className="absolute top-2 right-2 flex flex-col gap-1 items-end z-10">
           {file.containsPII && (
             <div className="bg-red-500 text-white rounded-full p-1 shadow-md" title="Contains sensitive PII">
@@ -74,10 +74,10 @@ export function FileCard({ file, onDoubleClicked }: FileCardProps) {
       <div className="p-3 flex items-start gap-2 justify-between flex-1 relative z-10">
         <div className="overflow-hidden">
           <div className="flex items-center gap-2 mb-1">
-            {getFileIcon(file.mimeType, "w-4 h-4 flex-shrink-0 text-brand-400")}
-            <span className="text-sm font-medium text-gray-200 truncate">{file.name}</span>
+            {getFileIcon(file.mimeType, "w-4 h-4 flex-shrink-0 text-black")}
+            <span className="text-sm font-bold text-black truncate">{file.name}</span>
           </div>
-          <span className="text-xs text-gray-500 block">
+          <span className="text-xs font-bold text-gray-500 block">
             {formatBytes(file.size)}
           </span>
         </div>
@@ -94,28 +94,28 @@ export function FileCard({ file, onDoubleClicked }: FileCardProps) {
           <DropdownMenu.Portal>
             <DropdownMenu.Content
               onClick={(e) => e.stopPropagation()}
-              className="min-w-[160px] bg-gray-800 border border-gray-700 rounded-lg p-1.5 shadow-xl animate-in fade-in z-50 mr-4"
+              className="min-w-[160px] bg-white border-2 border-black p-1.5 shadow-neo animate-in fade-in z-50 mr-4"
               align="end"
             >
               <DropdownMenu.Item 
                 onClick={handlePreview}
-                className="px-3 py-2 text-sm text-gray-200 outline-none cursor-pointer hover:bg-gray-700 rounded-md"
+                className="px-3 py-2 text-sm text-black font-bold outline-none cursor-pointer hover:bg-neo-yellow border-2 border-transparent hover:border-black"
               >
                 Preview
               </DropdownMenu.Item>
               <DropdownMenu.Item 
                 onClick={handleShare}
-                className="px-3 py-2 text-sm text-gray-200 outline-none cursor-pointer hover:bg-gray-700 rounded-md"
+                className="px-3 py-2 text-sm text-black font-bold outline-none cursor-pointer hover:bg-neo-yellow border-2 border-transparent hover:border-black"
               >
                 Share
               </DropdownMenu.Item>
-              <DropdownMenu.Item className="px-3 py-2 text-sm text-gray-200 outline-none cursor-pointer hover:bg-gray-700 rounded-md">
+              <DropdownMenu.Item className="px-3 py-2 text-sm text-black font-bold outline-none cursor-pointer hover:bg-neo-yellow border-2 border-transparent hover:border-black">
                 Rename
               </DropdownMenu.Item>
-              <DropdownMenu.Separator className="h-px bg-gray-700 my-1.5" />
+              <DropdownMenu.Separator className="h-[2px] bg-black my-1.5" />
               <DropdownMenu.Item 
                 onClick={handleTrash}
-                className="px-3 py-2 text-sm text-red-400 outline-none cursor-pointer hover:bg-red-500/10 rounded-md transition-colors"
+                className="px-3 py-2 text-sm text-black font-bold outline-none cursor-pointer hover:bg-red-500 border-2 border-transparent hover:border-black transition-colors"
               >
                 Move to trash
               </DropdownMenu.Item>

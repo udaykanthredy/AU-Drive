@@ -67,16 +67,16 @@ export function ChatPanel() {
   };
 
   return (
-    <div className="absolute right-0 top-0 bottom-0 w-[420px] bg-gray-950/60 backdrop-blur-3xl border-l border-white/10 shadow-[0_0_60px_-15px_rgba(0,0,0,0.5)] flex flex-col z-40 animate-in slide-in-from-right duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]">
+    <div className="absolute right-0 top-0 bottom-0 w-[420px] bg-neo-bg border-l-4 border-black flex flex-col z-40 animate-in slide-in-from-right duration-500 shadow-neo">
       {/* Header */}
-      <div className="h-[72px] flex items-center justify-between px-6 border-b border-white/5 flex-shrink-0 bg-transparent">
-        <div className="flex items-center gap-2 text-brand-500">
-          <Sparkles className="w-5 h-5" />
-          <h3 className="font-medium tracking-wide">Workspace AI</h3>
+      <div className="h-[72px] flex items-center justify-between px-6 border-b-4 border-black flex-shrink-0 bg-white">
+        <div className="flex items-center gap-2 text-black">
+          <Sparkles className="w-6 h-6 text-brand-500" />
+          <h3 className="font-bold tracking-wide uppercase">Workspace AI</h3>
         </div>
         <button
           onClick={() => setIsChatOpen(false)}
-          className="p-2 hover:bg-gray-800/50 rounded-xl text-gray-400 hover:text-white transition-colors"
+          className="p-2 border-2 border-transparent hover:border-black hover:bg-neo-pink rounded-none text-black font-bold transition-all"
         >
           <X className="w-5 h-5" />
         </button>
@@ -93,18 +93,18 @@ export function ChatPanel() {
             )}
           >
             <div className={clsx(
-              "w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mt-1",
-              msg.role === 'user' ? "bg-brand-600" : "bg-purple-600"
+              "w-8 h-8 flex items-center justify-center flex-shrink-0 mt-1 border-2 border-black shadow-neo-sm",
+              msg.role === 'user' ? "bg-neo-blue" : "bg-neo-yellow"
             )}>
-              {msg.role === 'user' ? <User className="w-5 h-5 text-white" /> : <Bot className="w-5 h-5 text-white" />}
+              {msg.role === 'user' ? <User className="w-5 h-5 text-black" /> : <Bot className="w-5 h-5 text-black" />}
             </div>
             <div className={clsx(
-              "px-4 py-3 text-sm",
+              "px-4 py-3 text-sm border-2 border-black font-medium shadow-neo-sm",
               msg.role === 'user' 
-                ? "bg-brand-600 text-white rounded-2xl rounded-tr-sm" 
-                : "bg-gray-800 text-gray-200 rounded-2xl rounded-tl-sm border border-gray-700"
+                ? "bg-white text-black" 
+                : "bg-white text-black"
             )}>
-              <div className="prose prose-invert prose-sm max-w-none">
+              <div className="prose prose-sm max-w-none prose-p:leading-snug">
                 <ReactMarkdown>{msg.content}</ReactMarkdown>
               </div>
             </div>
@@ -112,10 +112,10 @@ export function ChatPanel() {
         ))}
         {isLoading && (
           <div className="flex gap-3 max-w-[90%]">
-            <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mt-1 bg-purple-600">
-              <Bot className="w-5 h-5 text-white" />
+            <div className="w-8 h-8 flex items-center justify-center flex-shrink-0 mt-1 bg-neo-yellow border-2 border-black shadow-neo-sm">
+              <Bot className="w-5 h-5 text-black" />
             </div>
-            <div className="px-4 py-3 rounded-2xl bg-gray-800 border border-gray-700 rounded-tl-sm flex items-center gap-2 text-gray-400 text-sm">
+            <div className="px-4 py-3 bg-white border-2 border-black shadow-neo-sm flex items-center gap-2 text-black font-bold text-sm">
               <Loader2 className="w-4 h-4 animate-spin" />
               Thinking...
             </div>
@@ -125,25 +125,25 @@ export function ChatPanel() {
       </div>
 
       {/* Input */}
-      <div className="p-6 pt-4 bg-transparent">
-        <form onSubmit={handleSubmit} className="relative flex items-center shadow-lg shadow-black/20 rounded-2xl">
+      <div className="p-6 pt-4 bg-white border-t-4 border-black">
+        <form onSubmit={handleSubmit} className="relative flex items-center shadow-neo">
           <input
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Ask about your files..."
             disabled={isLoading}
-            className="w-full bg-gray-900/60 backdrop-blur-md border border-white/10 text-white rounded-2xl pl-5 pr-12 py-4 focus:outline-none focus:ring-1 focus:ring-brand-500 focus:border-brand-500/50 text-sm placeholder-gray-500 disabled:opacity-50 transition-all"
+            className="w-full bg-white border-2 border-black text-black rounded-none pl-5 pr-12 py-4 focus:outline-none focus:shadow-neo focus:-translate-y-[2px] focus:-translate-x-[2px] text-sm placeholder-gray-500 disabled:opacity-50 transition-all font-bold"
           />
           <button
             type="submit"
             disabled={!input.trim() || isLoading}
-            className="absolute right-2 p-2 rounded-xl text-brand-500 hover:text-brand-400 hover:bg-brand-500/10 disabled:opacity-50 disabled:hover:text-brand-500 disabled:hover:bg-transparent transition-colors"
+            className="absolute right-2 p-2 text-black bg-brand-500 border-2 border-black shadow-neo-sm hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none disabled:opacity-50 transition-all"
           >
-            <Send className="w-5 h-5" />
+            <Send className="w-4 h-4" />
           </button>
         </form>
-        <p className="text-center text-[10px] text-gray-500 mt-3 font-medium tracking-wide">
+        <p className="text-center text-[10px] text-black mt-4 font-bold tracking-widest uppercase">
           AI CAN MAKE MISTAKES. VERIFY IMPORTANT INFO.
         </p>
       </div>

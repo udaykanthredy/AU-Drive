@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${jost.variable} font-sans bg-[#0C0A09] text-stone-100 antialiased selection:bg-brand-500/30`}>
+      <body className={`${jost.variable} font-sans bg-neo-bg text-black antialiased selection:bg-brand-500/30 selection:text-black`}>
         <Providers>{children}</Providers>
       </body>
     </html>

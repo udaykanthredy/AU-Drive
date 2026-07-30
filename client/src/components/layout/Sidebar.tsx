@@ -63,41 +63,41 @@ export function Sidebar() {
   };
 
   return (
-    <aside className="w-64 flex-shrink-0 bg-gray-950/40 backdrop-blur-xl border-r border-white/5 flex flex-col z-20 relative before:absolute before:inset-0 before:bg-glass before:pointer-events-none">
+    <aside className="w-64 flex-shrink-0 bg-neo-bg border-r-4 border-black flex flex-col z-20 relative">
       {/* Logo */}
       <div className="px-6 py-6 flex items-center gap-3 relative z-10">
-        <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center shadow-lg shadow-brand-500/20">
-          <HardDrive className="w-4 h-4 text-gray-950" />
+        <div className="w-9 h-9 bg-brand-500 flex items-center justify-center border-2 border-black shadow-neo-sm">
+          <HardDrive className="w-5 h-5 text-black" />
         </div>
-        <span className="font-semibold tracking-wide text-white text-lg font-sans">AU Drive</span>
+        <span className="font-bold tracking-wide text-black text-xl font-sans uppercase">AU Drive</span>
       </div>
 
       {/* New Button */}
       <div className="px-4 mb-4 mt-2">
         <DropdownMenu.Root>
           <DropdownMenu.Trigger asChild>
-            <button className="flex items-center gap-2 bg-gray-800 hover:bg-gray-700 text-white px-5 py-3 rounded-xl font-medium transition-colors border border-gray-700 hover:border-gray-600 shadow-sm w-full md:w-auto">
-              <Plus className="w-5 h-5 text-brand-400" />
+            <button className="flex items-center gap-2 bg-brand-500 text-black px-5 py-3 font-bold transition-all border-2 border-black shadow-neo hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none w-full md:w-auto">
+              <Plus className="w-5 h-5 text-black" />
               New
             </button>
           </DropdownMenu.Trigger>
 
           <DropdownMenu.Portal>
             <DropdownMenu.Content
-              className="min-w-[200px] bg-gray-800 border border-gray-700 rounded-lg p-1.5 shadow-xl animate-in fade-in slide-in-from-top-2 z-50"
+              className="min-w-[200px] bg-white border-2 border-black p-1.5 shadow-neo animate-in fade-in slide-in-from-top-2 z-50"
               align="start"
               sideOffset={8}
             >
-              <DropdownMenu.Item className="flex items-center gap-2 px-3 py-2 outline-none cursor-pointer hover:bg-gray-700 rounded-md text-sm text-gray-200">
-                <FolderPlus className="w-4 h-4 text-gray-400" />
+              <DropdownMenu.Item className="flex items-center gap-2 px-3 py-2 outline-none cursor-pointer hover:bg-brand-200 text-sm font-semibold text-black border-2 border-transparent hover:border-black">
+                <FolderPlus className="w-4 h-4 text-black" />
                 New Folder
               </DropdownMenu.Item>
-              <DropdownMenu.Separator className="h-px bg-gray-700 my-1.5" />
+              <DropdownMenu.Separator className="h-[2px] bg-black my-1.5" />
               <DropdownMenu.Item 
                 onClick={handleFileUploadClick}
-                className="flex items-center gap-2 px-3 py-2 outline-none cursor-pointer hover:bg-gray-700 rounded-md text-sm text-gray-200"
+                className="flex items-center gap-2 px-3 py-2 outline-none cursor-pointer hover:bg-neo-blue text-sm font-semibold text-black border-2 border-transparent hover:border-black"
               >
-                <Upload className="w-4 h-4 text-gray-400" />
+                <Upload className="w-4 h-4 text-black" />
                 File Upload
               </DropdownMenu.Item>
             </DropdownMenu.Content>
@@ -115,39 +115,39 @@ export function Sidebar() {
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 px-3 space-y-0.5 overflow-y-auto">
+      <nav className="flex-1 px-3 space-y-2 overflow-y-auto mt-4">
         {navItems.map(({ href, label, icon: Icon }) => (
           <Link
             key={href}
             href={href}
             className={clsx(
-              'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors font-medium',
+              'flex items-center gap-3 px-3 py-3 text-sm transition-all font-bold border-2',
               pathname === href
-                ? 'bg-brand-600/15 text-brand-400'
-                : 'text-gray-300 hover:bg-gray-800'
+                ? 'bg-neo-yellow text-black border-black shadow-neo-sm'
+                : 'text-gray-800 border-transparent hover:border-black hover:bg-white hover:shadow-neo-sm'
             )}
           >
-            <Icon className="w-[18px] h-[18px]" />
+            <Icon className="w-[18px] h-[18px] text-black" />
             {label}
           </Link>
         ))}
       </nav>
 
       {/* Storage usage */}
-      <div className="px-6 py-6 border-t border-gray-800">
-        <div className="text-sm text-gray-400 mb-3 flex items-center justify-between">
+      <div className="px-6 py-6 border-t-4 border-black bg-white">
+        <div className="text-sm text-black font-bold mb-3 flex items-center justify-between">
           <span>Storage</span>
         </div>
-        <div className="h-1.5 rounded-full bg-gray-800 overflow-hidden mb-2">
+        <div className="h-4 bg-white overflow-hidden mb-2 border-2 border-black shadow-neo-sm">
           <div
             className={clsx(
-              'h-full transition-all duration-500 rounded-full',
-              storagePercent > 90 ? 'bg-red-500' : storagePercent > 70 ? 'bg-yellow-500' : 'bg-brand-500'
+              'h-full border-r-2 border-black',
+              storagePercent > 90 ? 'bg-red-500' : storagePercent > 70 ? 'bg-neo-yellow' : 'bg-brand-500'
             )}
             style={{ width: `${storagePercent}%` }}
           />
         </div>
-        <div className="text-xs text-gray-500">
+        <div className="text-xs font-bold text-gray-800">
           {formatBytes(storageUsed)} of {formatBytes(storageQuota)} used
         </div>
       </div>
