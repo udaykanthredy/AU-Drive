@@ -43,6 +43,7 @@ export function FileCard({ file, onDoubleClicked }: FileCardProps) {
       await filesApi.deleteFile(file._id);
       toast.success('File moved to trash');
       queryClient.invalidateQueries({ queryKey: ['files', file.folderId] });
+      queryClient.invalidateQueries({ queryKey: ['me'] });
     } catch {
       toast.error('Failed to move to trash');
     }

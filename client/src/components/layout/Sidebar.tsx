@@ -21,6 +21,8 @@ import { useFileUploader } from '@/hooks/useFileUploader';
 import { useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import { CreateFolderModal } from '@/components/drive/CreateFolderModal';
+import { useQuery } from '@tanstack/react-query';
+import { authApi } from '@/services/auth.service';
 
 const navItems = [
   { href: '/dashboard', label: 'My Drive', icon: FolderOpen },
@@ -49,8 +51,15 @@ export function Sidebar() {
   
   const currentFolderId = searchParams?.get('folder');
 
-  const storageUsed = user?.storageUsed ?? 0;
-  const storageQuota = user?.storageQuota ?? 15 * 1024 * 1024 * 1024; // 15GB fallback
+  const { data: meData } = useQuery({
+    queryKey: ['me'],
+    queryFn: () => authApi.getMe().then(res => res.data?.data?.user || res.data?.data),
+    staleTime: 1000 * 60 * 5, // 5 minutes
+  });
+
+  const currentUser = meData || user;
+  const storageUsed = currentUser?.storageUsed ?? 0;
+  const storageQuota = currentUser?.storageQuota ?? 15 * 1024 * 1024 * 1024; // 15GB fallback
   const storagePercent = Math.min(100, Math.round((storageUsed / storageQuota) * 100));
 
   const handleFileUploadClick = () => {

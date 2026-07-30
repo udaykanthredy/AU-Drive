@@ -26,6 +26,7 @@ export function useFileUploader() {
 
         // Invalidate TanStack query cache to force UI refresh
         queryClient.invalidateQueries({ queryKey: ['files', folderId] });
+        queryClient.invalidateQueries({ queryKey: ['me'] });
 
       } catch (err: any) {
         console.error('File upload failed:', err);
