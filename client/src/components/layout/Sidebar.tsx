@@ -68,7 +68,7 @@ export function Sidebar() {
   return (
     <aside className="w-64 flex-shrink-0 bg-neo-bg border-r-4 border-black flex flex-col z-20 relative">
       {/* Logo */}
-      <Link href="/dashboard" className="px-6 py-6 flex items-center gap-3 relative z-10 hover:opacity-80 transition-opacity">
+      <Link href="/" className="px-6 py-6 flex items-center gap-3 relative z-10 hover:opacity-80 transition-opacity">
         <div className="w-10 h-10 flex items-center justify-center">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" className="w-full h-full">
             <rect x="14" y="14" width="72" height="72" fill="#000000" />
