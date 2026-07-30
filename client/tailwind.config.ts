@@ -1,4 +1,6 @@
 /** @type {import('tailwindcss').Config} */
+const colors = require('tailwindcss/colors');
+
 module.exports = {
   content: [
     './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
@@ -9,21 +11,28 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        // Map all 'gray' classes to the 'stone' palette for a warm, luxury feel
+        gray: colors.stone,
         brand: {
-          50: '#f0f7ff',
-          100: '#e0f0fe',
-          200: '#b9e0fd',
-          300: '#7cc8fb',
-          400: '#36aaf6',
-          500: '#0c91e7',
-          600: '#0072c5',
-          700: '#015aa0',
-          800: '#064d84',
-          900: '#0b426e',
+          50: '#fefce8',
+          100: '#fef9c3',
+          200: '#fef08a',
+          300: '#fde047',
+          400: '#facc15',
+          500: '#eab308',
+          600: '#ca8a04', // The accent CTA gold from the design system
+          700: '#a16207',
+          800: '#854d0e',
+          900: '#713f12',
+          950: '#422006',
         },
       },
       fontFamily: {
-        sans: ['var(--font-inter)', 'system-ui', 'sans-serif'],
+        sans: ['var(--font-jost)', 'system-ui', 'sans-serif'],
+      },
+      backgroundImage: {
+        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+        'glass': 'linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%)',
       },
     },
   },

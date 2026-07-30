@@ -63,11 +63,7 @@ async def chat_with_file(request: ChatRequest) -> ChatResponse:
             detail="No LLM API key configured. Add GEMINI_API_KEY or OPENAI_API_KEY to your .env."
         )
 
-    if not request.file_id and not request.folder_id:
-        return ChatResponse(
-            answer="Please specify a file_id or folder_id to chat with.",
-            sources=[],
-        )
+    # file_id and folder_id are optional; if neither is provided, it searches all user files.
         
     if not request.messages:
         raise HTTPException(status_code=400, detail="Messages array cannot be empty.")
@@ -89,6 +85,18 @@ async def chat_with_file(request: ChatRequest) -> ChatResponse:
             file_map[fid] = file_doc["name"]
         except Exception:
             raise HTTPException(status_code=400, detail="Invalid file_id")
+    elif request.file_name:
+        try:
+            file_doc = await db.files.find_one({"name": request.file_name, "ownerId": user_id, "isDeleted": False})
+            if not file_doc:
+                raise HTTPException(status_code=404, detail=f"File '{request.file_name}' not found.")
+            file_ids_obj = [file_doc["_id"]]
+            file_map[file_doc["_id"]] = file_doc["name"]
+        except HTTPException:
+            raise
+        except Exception as e:
+            logger.error(f"Error finding file by name: {e}")
+            raise HTTPException(status_code=400, detail="Error looking up file by name")
     elif request.folder_id:
         try:
             folder_id_val = None if request.folder_id in ("root", None) else ObjectId(request.folder_id)

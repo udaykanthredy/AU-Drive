@@ -80,7 +80,7 @@ router.post('/summarize', async (req, res) => {
  */
 router.post('/chat', rateLimiter.chat, async (req, res) => {
   try {
-    const { fileId, folderId, messages } = req.body;
+    const { fileId, folderId, fileName, messages } = req.body;
     
     if (!messages || !Array.isArray(messages) || messages.length === 0) {
       return res.status(400).json({ success: false, message: 'messages array is required' });
@@ -90,6 +90,7 @@ router.post('/chat', rateLimiter.chat, async (req, res) => {
     const response = await axios.post(`${AI_SERVICE_URL}/chat/`, {
       file_id: fileId || null,
       folder_id: folderId && folderId !== 'root' ? folderId : null,
+      file_name: fileName || null,
       messages: messages,
       user_id: req.user.userId,
     });

@@ -72,6 +72,7 @@ class ChatMessage(BaseModel):
 class ChatRequest(BaseModel):
     file_id: Optional[str] = None
     folder_id: Optional[str] = None
+    file_name: Optional[str] = None
     messages: list[ChatMessage]
     user_id: str
 

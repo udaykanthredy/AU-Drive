@@ -53,10 +53,10 @@ export function FileCard({ file, onDoubleClicked }: FileCardProps) {
   return (
     <div
       onClick={() => onDoubleClicked?.(file)}
-      className="flex flex-col bg-gray-900 border border-gray-800 rounded-xl hover:bg-gray-800 hover:border-gray-700 cursor-pointer transition-all group shadow-sm hover:shadow-md h-full overflow-hidden"
+      className="flex flex-col bg-gray-900/40 backdrop-blur-md border border-white/5 rounded-2xl hover:bg-gray-800/60 hover:border-white/10 cursor-pointer transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-2xl hover:shadow-brand-500/10 group overflow-hidden relative before:absolute before:inset-0 before:bg-glass before:opacity-0 hover:before:opacity-100 before:transition-opacity before:pointer-events-none"
     >
-      {/* Thumbnail area (Placeholder for Phase 2 images) */}
-      <div className="h-32 bg-gray-950 flex items-center justify-center border-b border-gray-800 relative">
+      {/* Thumbnail area */}
+      <div className="h-32 bg-gray-950/40 flex items-center justify-center border-b border-white/5 relative z-10">
         <div className="absolute top-2 right-2 flex flex-col gap-1 items-end z-10">
           {file.containsPII && (
             <div className="bg-red-500 text-white rounded-full p-1 shadow-md" title="Contains sensitive PII">
@@ -71,7 +71,7 @@ export function FileCard({ file, onDoubleClicked }: FileCardProps) {
       </div>
 
       {/* Details area */}
-      <div className="p-3 flex items-start gap-2 justify-between flex-1">
+      <div className="p-3 flex items-start gap-2 justify-between flex-1 relative z-10">
         <div className="overflow-hidden">
           <div className="flex items-center gap-2 mb-1">
             {getFileIcon(file.mimeType, "w-4 h-4 flex-shrink-0 text-brand-400")}

@@ -67,23 +67,23 @@ export function ChatPanel() {
   };
 
   return (
-    <div className="absolute right-0 top-0 bottom-0 w-[400px] bg-gray-900 border-l border-gray-800 shadow-2xl flex flex-col z-40 animate-in slide-in-from-right duration-300">
+    <div className="absolute right-0 top-0 bottom-0 w-[420px] bg-gray-950/60 backdrop-blur-3xl border-l border-white/10 shadow-[0_0_60px_-15px_rgba(0,0,0,0.5)] flex flex-col z-40 animate-in slide-in-from-right duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]">
       {/* Header */}
-      <div className="h-16 flex items-center justify-between px-4 border-b border-gray-800 flex-shrink-0 bg-gray-950/50">
-        <div className="flex items-center gap-2 text-brand-400">
+      <div className="h-[72px] flex items-center justify-between px-6 border-b border-white/5 flex-shrink-0 bg-transparent">
+        <div className="flex items-center gap-2 text-brand-500">
           <Sparkles className="w-5 h-5" />
-          <h3 className="font-semibold">Workspace Chat</h3>
+          <h3 className="font-medium tracking-wide">Workspace AI</h3>
         </div>
         <button
           onClick={() => setIsChatOpen(false)}
-          className="p-2 hover:bg-gray-800 rounded-lg text-gray-400 hover:text-white transition-colors"
+          className="p-2 hover:bg-gray-800/50 rounded-xl text-gray-400 hover:text-white transition-colors"
         >
           <X className="w-5 h-5" />
         </button>
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-950/20">
+      <div className="flex-1 overflow-y-auto p-6 space-y-6 bg-transparent">
         {messages.map((msg, idx) => (
           <div
             key={idx}
@@ -104,9 +104,9 @@ export function ChatPanel() {
                 ? "bg-brand-600 text-white rounded-2xl rounded-tr-sm" 
                 : "bg-gray-800 text-gray-200 rounded-2xl rounded-tl-sm border border-gray-700"
             )}>
-              <ReactMarkdown className="prose prose-invert prose-sm max-w-none">
-                {msg.content}
-              </ReactMarkdown>
+              <div className="prose prose-invert prose-sm max-w-none">
+                <ReactMarkdown>{msg.content}</ReactMarkdown>
+              </div>
             </div>
           </div>
         ))}
@@ -125,26 +125,26 @@ export function ChatPanel() {
       </div>
 
       {/* Input */}
-      <div className="p-4 border-t border-gray-800 bg-gray-900">
-        <form onSubmit={handleSubmit} className="relative flex items-center">
+      <div className="p-6 pt-4 bg-transparent">
+        <form onSubmit={handleSubmit} className="relative flex items-center shadow-lg shadow-black/20 rounded-2xl">
           <input
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Ask about your files..."
             disabled={isLoading}
-            className="w-full bg-gray-800 border border-gray-700 text-white rounded-xl pl-4 pr-12 py-3 focus:outline-none focus:ring-1 focus:ring-brand-500 text-sm placeholder-gray-500 disabled:opacity-50"
+            className="w-full bg-gray-900/60 backdrop-blur-md border border-white/10 text-white rounded-2xl pl-5 pr-12 py-4 focus:outline-none focus:ring-1 focus:ring-brand-500 focus:border-brand-500/50 text-sm placeholder-gray-500 disabled:opacity-50 transition-all"
           />
           <button
             type="submit"
             disabled={!input.trim() || isLoading}
-            className="absolute right-2 p-1.5 text-brand-500 hover:text-brand-400 disabled:opacity-50 disabled:hover:text-brand-500 transition-colors"
+            className="absolute right-2 p-2 rounded-xl text-brand-500 hover:text-brand-400 hover:bg-brand-500/10 disabled:opacity-50 disabled:hover:text-brand-500 disabled:hover:bg-transparent transition-colors"
           >
             <Send className="w-5 h-5" />
           </button>
         </form>
-        <p className="text-center text-[10px] text-gray-500 mt-2">
-          AI can make mistakes. Check important info.
+        <p className="text-center text-[10px] text-gray-500 mt-3 font-medium tracking-wide">
+          AI CAN MAKE MISTAKES. VERIFY IMPORTANT INFO.
         </p>
       </div>
     </div>

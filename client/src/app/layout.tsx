@@ -1,19 +1,19 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Jost } from 'next/font/google';
 import './globals.css';
 import { Providers } from '@/components/Providers';
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
+const jost = Jost({ subsets: ['latin'], variable: '--font-jost' });
 
 export const metadata: Metadata = {
-  title: 'AU Drive — AI-Powered File Storage',
-  description: 'Store, organize, and chat with your files using AI',
+  title: 'AU Drive — Premium File Storage',
+  description: 'Intelligent file organization and insights',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.variable} font-sans bg-gray-950 text-white antialiased`}>
+      <body className={`${jost.variable} font-sans bg-[#0C0A09] text-stone-100 antialiased selection:bg-brand-500/30`}>
         <Providers>{children}</Providers>
       </body>
     </html>

@@ -29,14 +29,15 @@ export function Topbar() {
   };
 
   return (
-    <header className="h-16 border-b border-gray-800 bg-gray-900 flex items-center justify-between px-6 flex-shrink-0 z-10 w-full shadow-sm">
+    <header className="h-[72px] border-b border-white/5 bg-gray-950/40 backdrop-blur-xl flex items-center justify-between px-8 flex-shrink-0 z-10 w-full relative before:absolute before:inset-0 before:bg-glass before:pointer-events-none">
+      {/* Content needs relative z-10 to sit above the before pseudo-element background */}
       {/* Search Input */}
-      <div className="flex-1 flex max-w-2xl px-2">
+      <div className="flex-1 flex max-w-2xl px-2 relative z-10">
         <SearchBar />
       </div>
 
       {/* Right side controls */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-3 relative z-10">
         {/* View mode toggles */}
         <div className="hidden sm:flex items-center bg-gray-800/50 p-1 rounded-lg border border-gray-800 mr-2">
           <button
