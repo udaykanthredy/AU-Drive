@@ -86,13 +86,10 @@ router.post('/chat', rateLimiter.chat, async (req, res) => {
       return res.status(400).json({ success: false, message: 'messages array is required' });
     }
     
-    if (!fileId && !folderId) {
-      return res.status(400).json({ success: false, message: 'fileId or folderId is required' });
-    }
-
+    // fileId/folderId are optional — omitting them allows chatting across all files
     const response = await axios.post(`${AI_SERVICE_URL}/chat/`, {
-      file_id: fileId,
-      folder_id: folderId,
+      file_id: fileId || null,
+      folder_id: folderId && folderId !== 'root' ? folderId : null,
       messages: messages,
       user_id: req.user.userId,
     });

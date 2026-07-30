@@ -6,6 +6,7 @@ import { Sidebar } from '@/components/layout/Sidebar';
 import { Topbar } from '@/components/layout/Topbar';
 import { useAuthStore } from '@/store/authStore';
 import { Loader2 } from 'lucide-react';
+import { ChatPanel } from '@/components/drive/ChatPanel';
 
 /**
  * Drive layout — guards all /dashboard/* pages.
@@ -45,8 +46,13 @@ export default function DriveLayout({ children }: { children: React.ReactNode })
       <Sidebar />
       <div className="flex flex-1 flex-col overflow-hidden">
         <Topbar />
-        <main className="flex-1 overflow-y-auto p-6">{children}</main>
+        <main className="flex-1 overflow-y-auto p-6 relative">
+          {children}
+          {/* ChatPanel available on all drive pages */}
+          <ChatPanel />
+        </main>
       </div>
     </div>
   );
 }
+

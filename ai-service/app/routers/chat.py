@@ -91,19 +91,26 @@ async def chat_with_file(request: ChatRequest) -> ChatResponse:
             raise HTTPException(status_code=400, detail="Invalid file_id")
     elif request.folder_id:
         try:
-            folder_id_val = None if request.folder_id == "root" else ObjectId(request.folder_id)
+            folder_id_val = None if request.folder_id in ("root", None) else ObjectId(request.folder_id)
             cursor = db.files.find({"folderId": folder_id_val, "ownerId": user_id, "isDeleted": False})
             for doc in await cursor.to_list(length=None):
                 file_ids_obj.append(doc["_id"])
                 file_map[doc["_id"]] = doc["name"]
         except Exception:
             raise HTTPException(status_code=400, detail="Invalid folder_id")
+    else:
+        # No scope specified — search across ALL user files
+        cursor = db.files.find({"ownerId": user_id, "isDeleted": False})
+        for doc in await cursor.to_list(length=None):
+            file_ids_obj.append(doc["_id"])
+            file_map[doc["_id"]] = doc["name"]
 
     if not file_ids_obj:
         return ChatResponse(
-            answer="No files found in the specified scope to chat with.",
+            answer="You don't have any files yet. Upload some files and I can answer questions about them!",
             sources=[]
         )
+
 
     # 2. Embed the latest user query
     latest_query = request.messages[-1].content
