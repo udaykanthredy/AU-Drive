@@ -7,6 +7,7 @@ import { Topbar } from '@/components/layout/Topbar';
 import { useAuthStore } from '@/store/authStore';
 import { Loader2 } from 'lucide-react';
 import { ChatPanel } from '@/components/drive/ChatPanel';
+import { GlobalDropOverlay } from '@/components/drive/GlobalDropOverlay';
 
 /**
  * Drive layout — guards all /dashboard/* pages.
@@ -52,6 +53,7 @@ export default function DriveLayout({ children }: { children: React.ReactNode })
           <ChatPanel />
         </main>
       </div>
+      <GlobalDropOverlay />
     </div>
   );
 }
