@@ -14,6 +14,7 @@ import { UploadProgressPanel } from '@/components/drive/UploadProgressPanel';
 import { FilePreviewModal } from '@/components/drive/FilePreviewModal';
 import { ShareModal } from '@/components/drive/ShareModal';
 import type { Folder, File as FileModel } from '@/types';
+import { motion } from 'framer-motion';
 
 // TODO: Fetch real breadcrumb path array from backend based on current folderId
 function useMockBreadcrumbs(folderId?: string | null) {
@@ -103,11 +104,22 @@ export default function DashboardPage() {
                 {folders.length > 0 && (
                   <div>
                     <h2 className="text-lg font-bold text-black mb-4 tracking-wider underline decoration-4 underline-offset-4 decoration-neo-pink uppercase">FOLDERS</h2>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
+                    <motion.div 
+                      className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4"
+                      initial="hidden"
+                      animate="visible"
+                      variants={{
+                        hidden: { opacity: 0 },
+                        visible: {
+                          opacity: 1,
+                          transition: { staggerChildren: 0.05 }
+                        }
+                      }}
+                    >
                       {folders.map(folder => (
                         <FolderCard key={`folder-${folder._id}`} folder={folder} onClick={handleFolderClick} />
                       ))}
-                    </div>
+                    </motion.div>
                   </div>
                 )}
 
@@ -115,11 +127,22 @@ export default function DashboardPage() {
                 {files.length > 0 && (
                   <div>
                     <h2 className="text-lg font-bold text-black mb-4 tracking-wider underline decoration-4 underline-offset-4 decoration-neo-blue uppercase mt-6">FILES</h2>
-                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-5">
+                    <motion.div 
+                      className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-5"
+                      initial="hidden"
+                      animate="visible"
+                      variants={{
+                        hidden: { opacity: 0 },
+                        visible: {
+                          opacity: 1,
+                          transition: { staggerChildren: 0.05 }
+                        }
+                      }}
+                    >
                       {files.map(file => (
                         <FileCard key={`file-${file._id}`} file={file} onDoubleClicked={handleFileDoubleClick} />
                       ))}
-                    </div>
+                    </motion.div>
                   </div>
                 )}
               </div>

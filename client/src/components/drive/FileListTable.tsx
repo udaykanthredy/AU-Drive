@@ -7,6 +7,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { filesApi } from '@/services/files.service';
 import { useUIStore } from '@/store/uiStore';
 import toast from 'react-hot-toast';
+import { motion } from 'framer-motion';
 
 interface FileListTableProps {
   files: FileModel[];
@@ -49,9 +50,24 @@ export function FileListTable({ files, folders, onFolderClick, onFileDoubleClick
         <div></div>
       </div>
 
-      <div className="flex flex-col mt-2 gap-1">
+      <motion.div 
+        className="flex flex-col mt-2 gap-1"
+        initial="hidden"
+        animate="visible"
+        variants={{
+          hidden: { opacity: 0 },
+          visible: {
+            opacity: 1,
+            transition: { staggerChildren: 0.05 }
+          }
+        }}
+      >
         {folders.map((folder) => (
-          <div
+          <motion.div
+            variants={{
+              hidden: { opacity: 0, x: -10 },
+              visible: { opacity: 1, x: 0 }
+            }}
             key={`folder-${folder._id}`}
             onClick={() => onFolderClick?.(folder)}
             className="grid grid-cols-[minmax(200px,1fr)_120px_150px_100px_40px] items-center px-3 py-3 border-b-2 border-black hover:bg-neo-yellow cursor-pointer group transition-colors bg-white font-bold"
@@ -92,11 +108,15 @@ export function FileListTable({ files, folders, onFolderClick, onFileDoubleClick
                 </DropdownMenu.Portal>
               </DropdownMenu.Root>
             </div>
-          </div>
+          </motion.div>
         ))}
 
         {files.map((file) => (
-          <div
+          <motion.div
+            variants={{
+              hidden: { opacity: 0, x: -10 },
+              visible: { opacity: 1, x: 0 }
+            }}
             key={`file-${file._id}`}
             onClick={() => onFileDoubleClick?.(file)}
             className="grid grid-cols-[minmax(200px,1fr)_120px_150px_100px_40px] items-center px-3 py-3 border-b-2 border-black hover:bg-neo-blue cursor-pointer group transition-colors bg-white font-bold"
@@ -164,9 +184,9 @@ export function FileListTable({ files, folders, onFolderClick, onFileDoubleClick
                 </DropdownMenu.Portal>
               </DropdownMenu.Root>
             </div>
-          </div>
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
     </div>
   );
 }

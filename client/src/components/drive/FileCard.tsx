@@ -5,6 +5,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { filesApi } from '@/services/files.service';
 import { useUIStore } from '@/store/uiStore';
 import toast from 'react-hot-toast';
+import { motion } from 'framer-motion';
 
 interface FileCardProps {
   file: FileModel;
@@ -24,6 +25,11 @@ export function getFileIcon(mimeType: string, className?: string) {
   if (mimeType === 'application/pdf') return <FileText className={className} />;
   return <File className={className} />;
 }
+
+export const itemVariants = {
+  hidden: { opacity: 0, y: 15, scale: 0.95 },
+  visible: { opacity: 1, y: 0, scale: 1, transition: { type: 'spring', stiffness: 300, damping: 24 } }
+};
 
 export function FileCard({ file, onDoubleClicked }: FileCardProps) {
   const queryClient = useQueryClient();
@@ -51,9 +57,12 @@ export function FileCard({ file, onDoubleClicked }: FileCardProps) {
   };
 
   return (
-    <div
+    <motion.div
+      variants={itemVariants}
+      whileHover={{ scale: 1.02, rotate: 1 }}
+      whileTap={{ scale: 0.98 }}
       onClick={() => onDoubleClicked?.(file)}
-      className="flex flex-col bg-white border-2 border-black shadow-neo hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-none cursor-pointer transition-all duration-200 group overflow-hidden relative"
+      className="flex flex-col bg-white border-2 border-black shadow-neo hover:shadow-none cursor-pointer group overflow-hidden relative"
     >
       {/* Thumbnail area */}
       <div className="h-32 bg-neo-bg flex items-center justify-center border-b-2 border-black relative z-10">
