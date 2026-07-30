@@ -77,7 +77,16 @@ async function refreshToken(req, res, next) {
 
     return res.status(200).json({
       success: true,
-      data: { accessToken },
+      data: {
+        accessToken,
+        user: {
+          id: user._id,
+          name: user.name,
+          email: user.email,
+          storageUsed: user.storageUsed,
+          storageQuota: user.storageQuota,
+        },
+      },
     });
   } catch (err) {
     next(err);
