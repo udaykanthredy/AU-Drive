@@ -1,6 +1,7 @@
 import { useUploadStore } from '@/store/uploadStore';
 import { filesApi } from '@/services/files.service';
 import { useQueryClient } from '@tanstack/react-query';
+import toast from 'react-hot-toast';
 
 export function useFileUploader() {
   const { addUpload, updateProgress, updateStatus, togglePanel } = useUploadStore();
@@ -11,6 +12,11 @@ export function useFileUploader() {
     togglePanel(true);
 
     for (const file of files) {
+      if (file.size > 10 * 1024 * 1024) {
+        toast.error(`File "${file.name}" exceeds the 10MB limit.`);
+        continue;
+      }
+
       const uploadId = `upload-${Date.now()}-${Math.random().toString(36).substring(7)}`;
       addUpload(uploadId, file);
 

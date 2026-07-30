@@ -33,6 +33,10 @@ const saveMetadata = catchAsync(async (req, res) => {
     return res.status(400).json({ success: false, message: 'Missing required file metadata' });
   }
 
+  if (size > 10 * 1024 * 1024) {
+    return res.status(413).json({ success: false, message: 'File exceeds the 10MB limit' });
+  }
+
   const newFile = await filesService.createFileRecord({
     ownerId,
     name,
@@ -61,6 +65,10 @@ const uploadFile = catchAsync(async (req, res) => {
 
   if (!file) {
     return res.status(400).json({ success: false, message: 'No file provided' });
+  }
+
+  if (file.size > 10 * 1024 * 1024) {
+    return res.status(413).json({ success: false, message: 'File exceeds the 10MB limit' });
   }
 
   // Phase 5: Duplicate Detection
