@@ -19,6 +19,8 @@ import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { useAuthStore } from '@/store/authStore';
 import { useFileUploader } from '@/hooks/useFileUploader';
 import { useSearchParams } from 'next/navigation';
+import { useState } from 'react';
+import { CreateFolderModal } from '@/components/drive/CreateFolderModal';
 
 const navItems = [
   { href: '/dashboard', label: 'My Drive', icon: FolderOpen },
@@ -43,6 +45,7 @@ export function Sidebar() {
   
   const { uploadFiles } = useFileUploader();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isCreateFolderOpen, setIsCreateFolderOpen] = useState(false);
   
   const currentFolderId = searchParams?.get('folder');
 
@@ -94,8 +97,11 @@ export function Sidebar() {
               align="start"
               sideOffset={8}
             >
-              <DropdownMenu.Item className="flex items-center gap-2 px-3 py-2 outline-none cursor-pointer hover:bg-brand-200 text-sm font-semibold text-black border-2 border-transparent hover:border-black">
-                <FolderPlus className="w-4 h-4 text-black" />
+              <DropdownMenu.Item 
+                onClick={() => setIsCreateFolderOpen(true)}
+                className="flex items-center gap-2 px-3 py-2 outline-none cursor-pointer hover:bg-neo-yellow text-sm font-semibold text-black border-2 border-transparent hover:border-black"
+              >
+                <FolderPlus className="w-4 h-4 text-black stroke-[3]" />
                 New Folder
               </DropdownMenu.Item>
               <DropdownMenu.Separator className="h-[2px] bg-black my-1.5" />
@@ -157,6 +163,11 @@ export function Sidebar() {
           {formatBytes(storageUsed)} of {formatBytes(storageQuota)} used
         </div>
       </div>
+
+      <CreateFolderModal 
+        isOpen={isCreateFolderOpen} 
+        onClose={() => setIsCreateFolderOpen(false)} 
+      />
     </aside>
   );
 }
