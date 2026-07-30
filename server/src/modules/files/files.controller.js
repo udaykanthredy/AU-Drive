@@ -55,6 +55,40 @@ const saveMetadata = catchAsync(async (req, res) => {
 const crypto = require('crypto');
 const File = require('../../models/File.model');
 
+const checkDuplicate = catchAsync(async (req, res) => {
+  const { contentHash, name, size, mimeType, folderId } = req.body;
+  const ownerId = req.user.userId;
+
+  if (!contentHash) {
+    return res.status(400).json({ success: false, message: 'contentHash is required' });
+  }
+
+  // Find any existing file with the same hash owned by this user (including in trash!)
+  // If we find one, we can deduplicate.
+  const existingFile = await File.findOne({ ownerId, contentHash });
+
+  if (existingFile) {
+    // Perform Virtual Upload! Create a new file record pointing to the same R2 key
+    const newFile = await filesService.createFileRecord({
+      ownerId,
+      name,
+      size,
+      mimeType,
+      r2Key: existingFile.r2Key, // Reuse the same Cloudflare R2 object
+      contentHash,
+      folderId: folderId || null,
+    });
+
+    // Don't need to re-run AI processing if the hash is the same and we could just copy metadata,
+    // but for now enqueueing it ensures the new record gets the AI summary too.
+    await enqueueFileProcessing(newFile._id, newFile.r2Key);
+
+    return res.json({ success: true, isDuplicate: true, data: newFile });
+  }
+
+  res.json({ success: true, isDuplicate: false });
+});
+
 /**
  * Proxied upload: Browser → Express → R2 (bypasses CORS entirely)
  * Accepts multipart/form-data with a single file + optional folderId
@@ -239,6 +273,7 @@ const bulkDelete = catchAsync(async (req, res) => {
 module.exports = {
   generateUploadUrl,
   saveMetadata,
+  checkDuplicate,
   uploadFile,
   listFiles,
   getFile,

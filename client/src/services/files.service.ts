@@ -54,4 +54,7 @@ export const filesApi = {
       },
     });
   },
+
+  checkDuplicate: (data: { contentHash: string; name: string; size: number; mimeType: string; folderId?: string | null }) => 
+    apiClient.post('/files/check-duplicate', data),
 };

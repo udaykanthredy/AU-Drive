@@ -141,13 +141,17 @@ async function hardDeleteFile(fileId, userId) {
     throw error;
   }
 
-  // 1. Delete object from Cloudflare R2
-  try {
-    await deleteObject(file.r2Key);
-  } catch (err) {
-    // If it's already missing from R2, continue with DB deletion. Otherwise throw
-    if (err.name !== 'NoSuchKey') {
-      throw err;
+  // 1. Check if any other file record points to this R2 key (Deduplication)
+  const sharedCount = await File.countDocuments({ r2Key: file.r2Key });
+
+  // 2. Only delete from Cloudflare R2 if this is the last record pointing to it
+  if (sharedCount <= 1) {
+    try {
+      await deleteObject(file.r2Key);
+    } catch (err) {
+      if (err.name !== 'NoSuchKey') {
+        throw err;
+      }
     }
   }
 

@@ -23,6 +23,9 @@ router.post('/upload', upload.single('file'), filesController.uploadFile);
 router.post('/upload-url', filesController.generateUploadUrl);
 router.post('/metadata', filesController.saveMetadata);
 
+// Client-side Deduplication
+router.post('/check-duplicate', filesController.checkDuplicate);
+
 // Using GET / to fetch lists, so we don't conflict with /:id
 router.get('/', filesController.listFiles);
 

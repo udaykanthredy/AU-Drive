@@ -23,12 +23,33 @@ export function useFileUploader() {
       try {
         updateStatus(uploadId, 'uploading');
 
-        // Proxied upload: Browser → Express → R2 (no CORS issues)
-        await filesApi.uploadFile(file, folderId, (percent) => {
-          updateProgress(uploadId, percent);
+        // 1. Calculate SHA-256 Hash locally (Zero-Bandwidth check)
+        const buffer = await file.arrayBuffer();
+        const hashBuffer = await crypto.subtle.digest('SHA-256', buffer);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        const contentHash = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+
+        // 2. Check for duplicate on the backend
+        const duplicateRes = await filesApi.checkDuplicate({
+          contentHash,
+          name: file.name,
+          size: file.size,
+          mimeType: file.type || 'application/octet-stream',
+          folderId,
         });
 
-        updateStatus(uploadId, 'success');
+        if (duplicateRes.data.isDuplicate) {
+          // Virtual Upload Successful!
+          updateProgress(uploadId, 100);
+          updateStatus(uploadId, 'success');
+          toast.success(`Virtual Upload: "${file.name}" instantly deduplicated!`);
+        } else {
+          // 3. Normal upload if not a duplicate
+          await filesApi.uploadFile(file, folderId, (percent) => {
+            updateProgress(uploadId, percent);
+          });
+          updateStatus(uploadId, 'success');
+        }
 
         // Invalidate TanStack query cache to force UI refresh
         queryClient.invalidateQueries({ queryKey: ['files', folderId] });
