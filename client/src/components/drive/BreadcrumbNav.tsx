@@ -12,25 +12,25 @@ interface BreadcrumbNavProps {
 
 export function BreadcrumbNav({ paths }: BreadcrumbNavProps) {
   return (
-    <nav className="flex items-center space-x-1 text-lg mb-4">
+    <nav className="flex items-center space-x-1 text-xl mb-4 font-bold uppercase">
       <Link
         href="/dashboard"
-        className="text-gray-200 hover:text-brand-400 font-medium transition-colors px-2 py-1 rounded-md hover:bg-gray-800"
+        className="text-black hover:bg-neo-yellow border-2 border-transparent hover:border-black transition-colors px-2 py-1 rounded-none shadow-sm"
       >
         My Drive
       </Link>
       
       {paths.map((path, index) => (
         <div key={path._id} className="flex items-center">
-          <ChevronRight className="w-4 h-4 text-gray-500 mx-1 flex-shrink-0" />
+          <ChevronRight className="w-5 h-5 text-black mx-1 flex-shrink-0 stroke-[3]" />
           {index === paths.length - 1 ? (
-            <span className="text-gray-100 font-semibold px-2 py-1 cursor-default">
+            <span className="text-black font-bold px-2 py-1 cursor-default border-2 border-transparent">
               {path.name}
             </span>
           ) : (
             <Link
               href={`/dashboard?folder=${path._id}`}
-              className="text-gray-200 hover:text-brand-400 font-medium transition-colors px-2 py-1 rounded-md hover:bg-gray-800"
+              className="text-black hover:bg-neo-yellow border-2 border-transparent hover:border-black transition-colors px-2 py-1 rounded-none"
             >
               {path.name}
             </Link>

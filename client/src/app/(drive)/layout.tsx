@@ -33,8 +33,8 @@ export default function DriveLayout({ children }: { children: React.ReactNode })
   // Show spinner while checking auth
   if (!initialized || isLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-950">
-        <Loader2 className="w-8 h-8 animate-spin text-brand-400" />
+      <div className="flex min-h-screen items-center justify-center bg-neo-bg">
+        <Loader2 className="w-8 h-8 animate-spin text-brand-500" />
       </div>
     );
   }
@@ -42,9 +42,9 @@ export default function DriveLayout({ children }: { children: React.ReactNode })
   if (!isAuthenticated) return null;
 
   return (
-    <div className="flex h-screen overflow-hidden bg-gray-950">
+    <div className="flex h-screen overflow-hidden bg-neo-bg">
       <Sidebar />
-      <div className="flex flex-1 flex-col overflow-hidden">
+      <div className="flex flex-1 flex-col overflow-hidden relative z-0">
         <Topbar />
         <main className="flex-1 overflow-y-auto p-6 relative">
           {children}

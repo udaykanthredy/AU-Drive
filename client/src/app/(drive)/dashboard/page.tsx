@@ -52,9 +52,9 @@ export default function DashboardPage() {
   // Render Loading State
   if (isLoading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh] text-brand-500">
+      <div className="flex flex-col items-center justify-center min-h-[60vh] text-black">
         <Loader2 className="w-10 h-10 animate-spin mb-4" />
-        <p className="text-gray-400 font-medium">Loading your files...</p>
+        <p className="text-black font-bold uppercase tracking-widest">Loading your files...</p>
       </div>
     );
   }
@@ -63,9 +63,9 @@ export default function DashboardPage() {
   if (error) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh]">
-        <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-6 max-w-md text-center">
-          <h3 className="text-red-400 font-bold mb-2">Something went wrong</h3>
-          <p className="text-red-400/80 text-sm">{(error as any).message || 'Failed to load drive contents'}</p>
+        <div className="bg-red-500 border-4 border-black shadow-neo rounded-none p-6 max-w-md text-center">
+          <h3 className="text-black font-bold mb-2 uppercase">Something went wrong</h3>
+          <p className="text-black font-bold">{(error as any).message || 'Failed to load drive contents'}</p>
         </div>
       </div>
     );
@@ -77,7 +77,7 @@ export default function DashboardPage() {
     <div 
       {...getRootProps()}
       className={`h-full flex flex-col relative transition-colors duration-200 ${
-        isDragActive ? 'bg-brand-900/10 border-2 border-brand-500 rounded-2xl border-dashed scale-[0.99]' : ''
+        isDragActive ? 'bg-neo-blue border-4 border-black rounded-none border-dashed scale-[0.99]' : ''
       }`}
     >
       <input {...getInputProps()} />
@@ -90,10 +90,10 @@ export default function DashboardPage() {
       {/* Main Content Area */}
       <div className="flex-1 overflow-y-auto pb-6">
         {isEmpty ? (
-          <div className="flex flex-col items-center justify-center min-h-[50vh] border-2 border-dashed border-gray-800 rounded-2xl mx-2 bg-gray-900/30">
-            <UploadCloud className="w-16 h-16 text-gray-700 mb-4" />
-            <h3 className="text-lg font-medium text-gray-300 mb-1">Drop files here</h3>
-            <p className="text-gray-500 text-sm">or use the "New" button to upload documents.</p>
+          <div className="flex flex-col items-center justify-center min-h-[50vh] border-4 border-dashed border-black mx-2 bg-neo-yellow/30">
+            <UploadCloud className="w-16 h-16 text-black mb-4" />
+            <h3 className="text-xl font-bold text-black mb-1 uppercase">Drop files here</h3>
+            <p className="text-black font-bold text-sm">or use the "New" button to upload documents.</p>
           </div>
         ) : (
           <>
@@ -102,7 +102,7 @@ export default function DashboardPage() {
                 {/* Folders Section */}
                 {folders.length > 0 && (
                   <div>
-                    <h2 className="text-sm font-semibold text-gray-400 mb-4 tracking-wide">FOLDERS</h2>
+                    <h2 className="text-lg font-bold text-black mb-4 tracking-wider underline decoration-4 underline-offset-4 decoration-neo-pink uppercase">FOLDERS</h2>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
                       {folders.map(folder => (
                         <FolderCard key={`folder-${folder._id}`} folder={folder} onClick={handleFolderClick} />
@@ -114,7 +114,7 @@ export default function DashboardPage() {
                 {/* Files Section */}
                 {files.length > 0 && (
                   <div>
-                    <h2 className="text-sm font-semibold text-gray-400 mb-4 tracking-wide">FILES</h2>
+                    <h2 className="text-lg font-bold text-black mb-4 tracking-wider underline decoration-4 underline-offset-4 decoration-neo-blue uppercase mt-6">FILES</h2>
                     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-5">
                       {files.map(file => (
                         <FileCard key={`file-${file._id}`} file={file} onDoubleClicked={handleFileDoubleClick} />
