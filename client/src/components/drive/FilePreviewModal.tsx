@@ -1,7 +1,7 @@
 'use client';
 
 import * as Dialog from '@radix-ui/react-dialog';
-import { X, ExternalLink, Loader2, FileText, Image as ImageIcon, Download, Sparkles } from 'lucide-react';
+import { X, ExternalLink, Loader2, FileText, Image as ImageIcon, Download, Sparkles, Star } from 'lucide-react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { filesApi } from '@/services/files.service';
 import { aiApi } from '@/services/ai.service';
