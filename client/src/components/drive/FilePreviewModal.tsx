@@ -2,14 +2,16 @@
 
 import * as Dialog from '@radix-ui/react-dialog';
 import { X, ExternalLink, Loader2, FileText, Image as ImageIcon, Download, Sparkles } from 'lucide-react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { filesApi } from '@/services/files.service';
 import { aiApi } from '@/services/ai.service';
 import { useUIStore } from '@/store/uiStore';
 import { getFileIcon, formatBytes } from './FileCard';
+import toast from 'react-hot-toast';
 
 export function FilePreviewModal() {
   const { previewFileId, setPreviewFile } = useUIStore();
+  const queryClient = useQueryClient();
 
   const { data: fileWrapper, isLoading, error } = useQuery({
     queryKey: ['file', previewFileId],
@@ -26,6 +28,18 @@ export function FilePreviewModal() {
   if (!previewFileId) return null;
 
   const handleClose = () => setPreviewFile(null);
+
+  const handleToggleStar = async () => {
+    if (!fileWrapper) return;
+    try {
+      await filesApi.updateFile(fileWrapper._id, { isStarred: !fileWrapper.isStarred });
+      toast.success(fileWrapper.isStarred ? 'Removed from starred' : 'Starred file');
+      queryClient.invalidateQueries({ queryKey: ['file', previewFileId] });
+      queryClient.invalidateQueries({ queryKey: ['files', fileWrapper.folderId] });
+    } catch {
+      toast.error('Failed to update star status');
+    }
+  };
 
   return (
     <Dialog.Root open={!!previewFileId} onOpenChange={(open) => !open && handleClose()}>
@@ -47,6 +61,15 @@ export function FilePreviewModal() {
               </div>
 
               <div className="flex items-center gap-2">
+                {fileWrapper && (
+                  <button
+                    onClick={handleToggleStar}
+                    className={`p-2 text-black hover:bg-white border-2 border-transparent hover:border-black transition-colors ${fileWrapper.isStarred ? 'text-yellow-500' : ''}`}
+                    title={fileWrapper.isStarred ? "Unstar" : "Star"}
+                  >
+                    <Star className={`w-5 h-5 stroke-[3] ${fileWrapper.isStarred ? 'fill-yellow-500 text-yellow-500' : ''}`} />
+                  </button>
+                )}
                 {fileWrapper?.presignedUrl && (
                   <a
                     href={fileWrapper.presignedUrl}

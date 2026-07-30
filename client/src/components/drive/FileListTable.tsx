@@ -34,6 +34,17 @@ export function FileListTable({ files, folders, onFolderClick, onFileDoubleClick
     }
   };
 
+  const handleToggleStar = async (file: FileModel, e: React.MouseEvent) => {
+    e.stopPropagation();
+    try {
+      await filesApi.updateFile(file._id, { isStarred: !file.isStarred });
+      toast.success(file.isStarred ? 'Removed from starred' : 'Starred file');
+      queryClient.invalidateQueries({ queryKey: ['files', file.folderId] });
+    } catch {
+      toast.error('Failed to update star status');
+    }
+  };
+
   if (files.length === 0 && folders.length === 0) {
     return (
       <div className="flex -mt-10 items-center justify-center p-12 text-black text-sm font-bold italic">
@@ -168,6 +179,12 @@ export function FileListTable({ files, folders, onFolderClick, onFileDoubleClick
                       className="px-3 py-2 text-sm text-black font-bold outline-none cursor-pointer hover:bg-neo-yellow border-2 border-transparent hover:border-black"
                     >
                       Preview
+                    </DropdownMenu.Item>
+                    <DropdownMenu.Item 
+                      onClick={(e) => handleToggleStar(file, e)}
+                      className="px-3 py-2 text-sm text-black font-bold outline-none cursor-pointer hover:bg-neo-yellow border-2 border-transparent hover:border-black"
+                    >
+                      {file.isStarred ? 'Unstar' : 'Star'}
                     </DropdownMenu.Item>
                     <DropdownMenu.Item 
                       onClick={(e) => { e.stopPropagation(); setShareFile(file._id); }}
