@@ -8,6 +8,7 @@ import { useAuthStore } from '@/store/authStore';
 import { Loader2 } from 'lucide-react';
 import { ChatPanel } from '@/components/drive/ChatPanel';
 import { GlobalDropOverlay } from '@/components/drive/GlobalDropOverlay';
+import { BulkActionBar } from '@/components/drive/BulkActionBar';
 
 /**
  * Drive layout — guards all /dashboard/* pages.
@@ -54,6 +55,7 @@ export default function DriveLayout({ children }: { children: React.ReactNode })
         </main>
       </div>
       <GlobalDropOverlay />
+      <BulkActionBar />
     </div>
   );
 }

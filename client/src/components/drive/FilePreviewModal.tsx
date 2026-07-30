@@ -8,6 +8,79 @@ import { aiApi } from '@/services/ai.service';
 import { useUIStore } from '@/store/uiStore';
 import { getFileIcon, formatBytes } from './FileCard';
 import toast from 'react-hot-toast';
+import { useState, useEffect } from 'react';
+import ReactMarkdown from 'react-markdown';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { neo } from 'react-syntax-highlighter/dist/esm/styles/prism';
+
+function TextFileViewer({ url, fileName }: { url: string; fileName: string }) {
+  const [content, setContent] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    fetch(url)
+      .then(res => res.text())
+      .then(text => {
+        setContent(text);
+        setIsLoading(false);
+      })
+      .catch(() => {
+        setContent('Error loading file content.');
+        setIsLoading(false);
+      });
+  }, [url]);
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col items-center justify-center w-full h-full text-black">
+        <Loader2 className="w-8 h-8 animate-spin mb-4" />
+        <p className="font-bold uppercase tracking-widest">Loading content...</p>
+      </div>
+    );
+  }
+
+  const ext = fileName.split('.').pop()?.toLowerCase();
+  
+  if (ext === 'md') {
+    return (
+      <div className="w-full h-full bg-white p-8 overflow-y-auto prose prose-xl border-4 border-black shadow-neo">
+        <ReactMarkdown>{content || ''}</ReactMarkdown>
+      </div>
+    );
+  }
+
+  // Define language mapping
+  const langMap: Record<string, string> = {
+    'js': 'javascript',
+    'jsx': 'jsx',
+    'ts': 'typescript',
+    'tsx': 'tsx',
+    'py': 'python',
+    'json': 'json',
+    'html': 'html',
+    'css': 'css'
+  };
+
+  const language = ext && langMap[ext] ? langMap[ext] : 'text';
+
+  return (
+    <div className="w-full h-full bg-white border-4 border-black shadow-neo overflow-hidden flex flex-col">
+      <div className="bg-black text-white px-4 py-2 font-mono text-sm font-bold flex-shrink-0">
+        {fileName}
+      </div>
+      <div className="flex-1 overflow-auto">
+        <SyntaxHighlighter
+          language={language}
+          style={neo}
+          customStyle={{ margin: 0, padding: '1.5rem', background: 'transparent' }}
+          showLineNumbers
+        >
+          {content || ''}
+        </SyntaxHighlighter>
+      </div>
+    </div>
+  );
+}
 
 export function FilePreviewModal() {
   const { previewFileId, setPreviewFile } = useUIStore();
@@ -123,6 +196,8 @@ export function FilePreviewModal() {
                         className="w-full h-full border-4 border-black shadow-neo bg-white"
                         title={fileWrapper.name}
                       />
+                    ) : fileWrapper.mimeType.startsWith('text/') || ['js', 'jsx', 'ts', 'tsx', 'py', 'json', 'md'].includes(fileWrapper.name.split('.').pop()?.toLowerCase() || '') ? (
+                      <TextFileViewer url={fileWrapper.presignedUrl} fileName={fileWrapper.name} />
                     ) : (
                       // Fallback for non-previewable files
                       <div className="flex flex-col items-center justify-center text-center p-8 bg-white border-4 border-black shadow-neo max-w-sm">

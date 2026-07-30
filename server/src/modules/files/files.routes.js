@@ -26,6 +26,11 @@ router.post('/metadata', filesController.saveMetadata);
 // Using GET / to fetch lists, so we don't conflict with /:id
 router.get('/', filesController.listFiles);
 
+// Bulk actions
+router.post('/bulk/download', filesController.bulkDownload);
+router.patch('/bulk/move', filesController.bulkMove);
+router.delete('/bulk/delete', filesController.bulkDelete);
+
 /**
  * GET    /api/files/:id    → get file metadata + presigned download URL
  * PATCH  /api/files/:id    → rename, star, move

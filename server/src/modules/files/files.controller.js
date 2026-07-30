@@ -182,6 +182,60 @@ const permanentDeleteFile = catchAsync(async (req, res) => {
   res.json({ success: true, data: result });
 });
 
+const archiver = require('archiver');
+const { downloadFromR2 } = require('../../services/r2.service');
+
+const bulkDownload = catchAsync(async (req, res) => {
+  const { fileIds } = req.body;
+  const userId = req.user.userId;
+
+  if (!fileIds || !Array.isArray(fileIds) || fileIds.length === 0) {
+    return res.status(400).json({ success: false, message: 'No files provided' });
+  }
+
+  const files = await File.find({ _id: { $in: fileIds }, ownerId: userId, isDeleted: false });
+  if (files.length === 0) {
+    return res.status(404).json({ success: false, message: 'Files not found' });
+  }
+
+  res.attachment('AU-Drive-Export.zip');
+  const archive = archiver('zip', { zlib: { level: 9 } });
+
+  archive.on('error', (err) => res.status(500).send({ error: err.message }));
+  archive.pipe(res);
+
+  for (const file of files) {
+    const buffer = await downloadFromR2(file.r2Key);
+    archive.append(buffer, { name: file.name });
+  }
+
+  await archive.finalize();
+});
+
+const bulkMove = catchAsync(async (req, res) => {
+  const { fileIds, folderId } = req.body;
+  const userId = req.user.userId;
+
+  await File.updateMany(
+    { _id: { $in: fileIds }, ownerId: userId, isDeleted: false },
+    { $set: { folderId: folderId || null } }
+  );
+
+  res.json({ success: true, message: 'Files moved successfully' });
+});
+
+const bulkDelete = catchAsync(async (req, res) => {
+  const { fileIds } = req.body;
+  const userId = req.user.userId;
+
+  await File.updateMany(
+    { _id: { $in: fileIds }, ownerId: userId, isDeleted: false },
+    { $set: { isDeleted: true, deletedAt: new Date() } }
+  );
+
+  res.json({ success: true, message: 'Files moved to trash' });
+});
+
 module.exports = {
   generateUploadUrl,
   saveMetadata,
@@ -192,4 +246,7 @@ module.exports = {
   updateFile,
   restoreFile,
   permanentDeleteFile,
+  bulkDownload,
+  bulkMove,
+  bulkDelete,
 };

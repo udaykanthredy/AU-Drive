@@ -6,6 +6,7 @@ import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { useQueryClient } from '@tanstack/react-query';
 import { filesApi } from '@/services/files.service';
 import { useUIStore } from '@/store/uiStore';
+import { useSelectionStore } from '@/store/selectionStore';
 import toast from 'react-hot-toast';
 import { motion } from 'framer-motion';
 
@@ -36,6 +37,9 @@ export const itemVariants = {
 export function FileCard({ file, onDoubleClicked }: FileCardProps) {
   const queryClient = useQueryClient();
   const { setShareFile } = useUIStore();
+  const { selectedFileIds, toggleSelection } = useSelectionStore();
+
+  const isSelected = selectedFileIds.includes(file._id);
 
   const handleTrash = async (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -88,9 +92,21 @@ export function FileCard({ file, onDoubleClicked }: FileCardProps) {
           )}
         </div>
         {getFileIcon(file.mimeType, "w-12 h-12 text-gray-700")}
-        {file.isStarred && (
-          <Star className="absolute top-2 left-2 w-4 h-4 text-yellow-500 fill-current" />
-        )}
+        <div className="absolute top-3 left-3 z-10 flex items-center gap-2">
+          {file.isStarred && (
+            <Star className="w-5 h-5 fill-neo-yellow text-black stroke-[2] drop-shadow-[2px_2px_0_rgba(0,0,0,1)]" />
+          )}
+          <input
+            type="checkbox"
+            checked={isSelected}
+            onChange={(e) => {
+              e.stopPropagation();
+              toggleSelection(file._id);
+            }}
+            onClick={(e) => e.stopPropagation()}
+            className="w-5 h-5 appearance-none border-2 border-black bg-white checked:bg-brand-500 checked:after:content-['✓'] checked:after:text-black checked:after:font-black checked:after:flex checked:after:items-center checked:after:justify-center cursor-pointer shadow-neo-sm hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-none transition-all outline-none"
+          />
+        </div>
       </div>
 
       {/* Details area */}

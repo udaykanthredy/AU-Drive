@@ -10,6 +10,7 @@ import { filesApi } from '@/services/files.service';
 import { useUIStore } from '@/store/uiStore';
 import toast from 'react-hot-toast';
 import { motion } from 'framer-motion';
+import { useSelectionStore } from '@/store/selectionStore';
 
 interface FileListTableProps {
   files: FileModel[];
@@ -22,6 +23,17 @@ interface FileListTableProps {
 export function FileListTable({ files, folders, onFolderClick, onFileDoubleClick, showPath }: FileListTableProps) {
   const queryClient = useQueryClient();
   const { setShareFile } = useUIStore();
+  const { selectedFileIds, toggleSelection, selectAll, clearSelection } = useSelectionStore();
+
+  const allSelected = files.length > 0 && selectedFileIds.length === files.length;
+  
+  const handleSelectAll = () => {
+    if (allSelected) {
+      clearSelection();
+    } else {
+      selectAll(files.map(f => f._id));
+    }
+  };
 
   const handleDeleteFile = async (file: FileModel, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -56,7 +68,17 @@ export function FileListTable({ files, folders, onFolderClick, onFileDoubleClick
 
   return (
     <div className="w-full">
-      <div className="grid grid-cols-[minmax(200px,1fr)_120px_150px_100px_40px] items-center text-xs font-bold text-black border-b-4 border-black pb-2 px-3">
+      <div className="grid grid-cols-[40px_minmax(200px,1fr)_120px_150px_100px_40px] items-center text-xs font-bold text-black border-b-4 border-black pb-2 px-3">
+        <div className="flex items-center justify-center">
+          {files.length > 0 && (
+            <input
+              type="checkbox"
+              checked={allSelected}
+              onChange={handleSelectAll}
+              className="w-4 h-4 appearance-none border-2 border-black bg-white checked:bg-brand-500 checked:after:content-['✓'] checked:after:text-black checked:after:font-black checked:after:flex checked:after:items-center checked:after:justify-center checked:after:text-[10px] cursor-pointer shadow-neo-sm hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-none transition-all outline-none"
+            />
+          )}
+        </div>
         <div className="uppercase">Name</div>
         <div className="uppercase">Owner</div>
         <div className="uppercase">Last modified</div>
@@ -84,8 +106,9 @@ export function FileListTable({ files, folders, onFolderClick, onFileDoubleClick
             }}
             key={`folder-${folder._id}`}
             onClick={() => onFolderClick?.(folder)}
-            className="grid grid-cols-[minmax(200px,1fr)_120px_150px_100px_40px] items-center px-3 py-3 border-b-2 border-black hover:bg-neo-yellow cursor-pointer group transition-colors bg-white font-bold"
+            className="grid grid-cols-[40px_minmax(200px,1fr)_120px_150px_100px_40px] items-center px-3 py-3 border-b-2 border-black hover:bg-neo-yellow cursor-pointer group transition-colors bg-white font-bold"
           >
+            <div></div>
             <div className="flex items-center gap-3 truncate pr-4">
               <FolderIcon className="w-5 h-5 text-black flex-shrink-0 transition-colors fill-current" />
               <span className="text-sm font-bold text-black truncate">{folder.name}</span>
@@ -133,8 +156,20 @@ export function FileListTable({ files, folders, onFolderClick, onFileDoubleClick
             }}
             key={`file-${file._id}`}
             onClick={() => onFileDoubleClick?.(file)}
-            className="grid grid-cols-[minmax(200px,1fr)_120px_150px_100px_40px] items-center px-3 py-3 border-b-2 border-black hover:bg-neo-blue cursor-pointer group transition-colors bg-white font-bold"
+            className="grid grid-cols-[40px_minmax(200px,1fr)_120px_150px_100px_40px] items-center px-3 py-3 border-b-2 border-black hover:bg-neo-blue cursor-pointer group transition-colors bg-white font-bold"
           >
+            <div className="flex items-center justify-center">
+              <input
+                type="checkbox"
+                checked={selectedFileIds.includes(file._id)}
+                onChange={(e) => {
+                  e.stopPropagation();
+                  toggleSelection(file._id);
+                }}
+                onClick={(e) => e.stopPropagation()}
+                className="w-4 h-4 appearance-none border-2 border-black bg-white checked:bg-brand-500 checked:after:content-['✓'] checked:after:text-black checked:after:font-black checked:after:flex checked:after:items-center checked:after:justify-center checked:after:text-[10px] cursor-pointer shadow-neo-sm hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-none transition-all outline-none"
+              />
+            </div>
             <div className="flex items-center gap-3 truncate pr-4">
               <div className="relative">
                 {getFileIcon(file.mimeType, "w-5 h-5 flex-shrink-0 text-black")}

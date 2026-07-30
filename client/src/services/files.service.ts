@@ -32,6 +32,10 @@ export const filesApi = {
   deleteFile: (id: string) => apiClient.delete(`/files/${id}`),
 
   permanentDeleteFile: (id: string) => apiClient.delete(`/files/${id}/permanent`),
+  
+  bulkDownload: (fileIds: string[]) => apiClient.post('/files/bulk/download', { fileIds }, { responseType: 'blob' }),
+  bulkMove: (fileIds: string[], folderId?: string | null) => apiClient.patch('/files/bulk/move', { fileIds, folderId }),
+  bulkDelete: (fileIds: string[]) => apiClient.delete('/files/bulk/delete', { data: { fileIds } }),
 
   restoreFile: (id: string) => apiClient.post(`/files/${id}/restore`),
 
