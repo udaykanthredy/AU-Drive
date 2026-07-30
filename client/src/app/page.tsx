@@ -1,7 +1,12 @@
+'use client';
+
 import Link from 'next/link';
 import { ArrowRight, Bot, Search, Shield, Zap } from 'lucide-react';
+import { useAuthStore } from '@/store/authStore';
 
 export default function HomePage() {
+  const user = useAuthStore(s => s.user);
+
   return (
     <div className="min-h-screen bg-neo-bg flex flex-col font-sans overflow-x-hidden">
       {/* Navigation */}
@@ -20,18 +25,29 @@ export default function HomePage() {
         </div>
         
         <div className="flex items-center gap-4">
-          <Link
-            href="/login"
-            className="hidden md:inline-block px-6 py-2.5 text-black font-bold uppercase text-sm border-2 border-transparent hover:border-black hover:bg-neo-yellow transition-all"
-          >
-            Log in
-          </Link>
-          <Link
-            href="/register"
-            className="px-6 py-2.5 bg-brand-500 text-black font-bold uppercase text-sm border-2 border-black shadow-neo-sm hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all"
-          >
-            Start for free
-          </Link>
+          {user ? (
+            <Link
+              href="/dashboard"
+              className="px-6 py-2.5 bg-brand-500 text-black font-bold uppercase text-sm border-2 border-black shadow-neo-sm hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all"
+            >
+              Go to Dashboard
+            </Link>
+          ) : (
+            <>
+              <Link
+                href="/login"
+                className="hidden md:inline-block px-6 py-2.5 text-black font-bold uppercase text-sm border-2 border-transparent hover:border-black hover:bg-neo-yellow transition-all"
+              >
+                Log in
+              </Link>
+              <Link
+                href="/register"
+                className="px-6 py-2.5 bg-brand-500 text-black font-bold uppercase text-sm border-2 border-black shadow-neo-sm hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all"
+              >
+                Start for free
+              </Link>
+            </>
+          )}
         </div>
       </nav>
 
@@ -56,19 +72,31 @@ export default function HomePage() {
             </p>
             
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-6">
-              <Link
-                href="/register"
-                className="group flex items-center gap-2 px-6 py-3 bg-brand-500 text-black font-black uppercase text-base border-4 border-black shadow-neo hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-none transition-all"
-              >
-                Get Started
-                <ArrowRight className="w-5 h-5 stroke-[3] group-hover:translate-x-1 transition-transform" />
-              </Link>
-              <Link
-                href="/login"
-                className="px-6 py-3 bg-white text-black font-black uppercase text-base border-4 border-black shadow-neo hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-none transition-all"
-              >
-                Log In
-              </Link>
+              {user ? (
+                <Link
+                  href="/dashboard"
+                  className="group flex items-center gap-2 px-8 py-4 bg-brand-500 text-black font-black uppercase text-lg border-4 border-black shadow-neo hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-none transition-all"
+                >
+                  Go to Dashboard
+                  <ArrowRight className="w-6 h-6 stroke-[3] group-hover:translate-x-1 transition-transform" />
+                </Link>
+              ) : (
+                <>
+                  <Link
+                    href="/register"
+                    className="group flex items-center gap-2 px-6 py-3 bg-brand-500 text-black font-black uppercase text-base border-4 border-black shadow-neo hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-none transition-all"
+                  >
+                    Get Started
+                    <ArrowRight className="w-5 h-5 stroke-[3] group-hover:translate-x-1 transition-transform" />
+                  </Link>
+                  <Link
+                    href="/login"
+                    className="px-6 py-3 bg-white text-black font-black uppercase text-base border-4 border-black shadow-neo hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-none transition-all"
+                  >
+                    Log In
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         </section>
