@@ -62,7 +62,7 @@ export const useAuthStore = create<AuthState>()(
       },
     }),
     {
-      name: 'au-drive-auth',
+      name: 'echodrive-auth',
       // Only persist user data, not the token (security)
       partialize: (state) => ({ user: state.user, isAuthenticated: state.isAuthenticated }),
     }

@@ -30,7 +30,7 @@ export const useUIStore = create<UIState>()(
       setIsChatOpen: (isChatOpen) => set({ isChatOpen }),
     }),
     {
-      name: 'au-drive-ui-prefs',
+      name: 'echodrive-ui-prefs',
       /** Only persist the view mode, not the open modals */
       partialize: (state) => ({ viewMode: state.viewMode }),
     }

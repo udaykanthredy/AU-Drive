@@ -9,7 +9,7 @@ Built with **MERN stack** + **Cloudflare R2** + **FastAPI AI microservice**.
 ## 🏗️ Architecture
 
 ```
-AU-Drive/
+EchoDrive/
 ├── client/          # Next.js 14 (App Router) frontend
 ├── server/          # Express.js REST API
 ├── ai-service/      # FastAPI AI microservice (Python)
@@ -26,7 +26,7 @@ AU-Drive/
 ### 1. Clone & Install
 ```bash
 git clone <repo-url>
-cd AU-Drive
+cd EchoDrive
 cp .env.example .env   # Fill in your values
 npm install
 ```

@@ -87,7 +87,7 @@ export function Sidebar() {
             <rect x="22" y="24" width="12" height="12" fill="#FDE047" stroke="#000000" strokeWidth="4" />
           </svg>
         </div>
-        <span className="font-bold tracking-wide text-black text-xl font-sans uppercase">AU Drive</span>
+        <span className="font-bold tracking-wide text-black text-xl font-sans uppercase">EchoDrive</span>
       </Link>
 
       {/* New Button */}

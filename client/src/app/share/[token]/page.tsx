@@ -34,7 +34,7 @@ export default function SharedFilePage({ params }: { params: { token: string } }
             The shared link you are trying to access has either expired, been revoked by the owner, or never existed.
           </p>
           <a href="/" className="inline-block bg-gray-800 hover:bg-gray-700 text-gray-300 font-medium py-2 px-6 rounded-lg transition-colors">
-            Go to AU-Drive
+            Go to EchoDrive
           </a>
         </div>
       </div>
@@ -55,7 +55,7 @@ export default function SharedFilePage({ params }: { params: { token: string } }
       <nav className="h-16 border-b border-gray-800 bg-gray-900 flex items-center justify-between px-6 flex-shrink-0">
         <div className="flex items-center gap-2">
           <Globe className="w-6 h-6 text-brand-500" />
-          <span className="font-bold text-gray-200">Shared via AU-Drive</span>
+          <span className="font-bold text-gray-200">Shared via EchoDrive</span>
         </div>
         <a 
           href={fileWrapper.presignedUrl}

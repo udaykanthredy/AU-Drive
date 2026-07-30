@@ -6,7 +6,7 @@ import { Providers } from '@/components/Providers';
 const jost = Jost({ subsets: ['latin'], variable: '--font-jost' });
 
 export const metadata: Metadata = {
-  title: 'AU Drive — Premium File Storage',
+  title: 'EchoDrive — Premium File Storage',
   description: 'Intelligent file organization and insights',
 };
 

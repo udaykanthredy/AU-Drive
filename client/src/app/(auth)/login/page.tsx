@@ -54,7 +54,7 @@ export default function LoginPage() {
               <rect x="22" y="24" width="12" height="12" fill="#FDE047" stroke="#000000" strokeWidth="4" />
             </svg>
           </div>
-          <span className="text-3xl font-bold text-black uppercase tracking-widest">AU Drive</span>
+          <span className="text-3xl font-bold text-black uppercase tracking-widest">EchoDrive</span>
         </div>
 
         <div className="bg-white border-4 border-black p-8 shadow-neo">

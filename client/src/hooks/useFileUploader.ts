@@ -38,18 +38,11 @@ export function useFileUploader() {
           folderId,
         });
 
-        if (duplicateRes.data.isDuplicate) {
-          // Virtual Upload Successful!
-          updateProgress(uploadId, 100);
-          updateStatus(uploadId, 'success');
-          toast.success(`Virtual Upload: "${file.name}" instantly deduplicated!`);
-        } else {
-          // 3. Normal upload if not a duplicate
-          await filesApi.uploadFile(file, folderId, (percent) => {
-            updateProgress(uploadId, percent);
-          });
-          updateStatus(uploadId, 'success');
-        }
+        // 3. Normal upload if not a duplicate (409 will be thrown if it is)
+        await filesApi.uploadFile(file, folderId, (percent) => {
+          updateProgress(uploadId, percent);
+        });
+        updateStatus(uploadId, 'success');
 
         // Invalidate TanStack query cache to force UI refresh
         queryClient.invalidateQueries({ queryKey: ['files', folderId] });

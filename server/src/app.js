@@ -49,7 +49,7 @@ app.use('/api', routes);
 app.get('/api/health', (_req, res) => {
   res.json({
     status: 'ok',
-    service: 'au-drive-server',
+    service: 'echodrive-server',
     timestamp: new Date().toISOString(),
     env: process.env.NODE_ENV,
   });

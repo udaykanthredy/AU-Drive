@@ -21,7 +21,7 @@ export default function HomePage() {
               <rect x="22" y="24" width="12" height="12" fill="#FDE047" stroke="#000000" strokeWidth="4" />
             </svg>
           </div>
-          <span className="text-2xl font-black text-black uppercase tracking-widest">AU Drive</span>
+          <span className="text-2xl font-black text-black uppercase tracking-widest">EchoDrive</span>
         </div>
         
         <div className="flex items-center gap-4">
@@ -120,7 +120,7 @@ export default function HomePage() {
         <section className="px-6 py-24 bg-neo-bg">
           <div className="max-w-6xl mx-auto">
             <h2 className="text-4xl md:text-6xl font-black text-black uppercase mb-16 text-center underline decoration-8 underline-offset-8 decoration-brand-500">
-              Why AU Drive?
+              Why EchoDrive?
             </h2>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -176,10 +176,10 @@ export default function HomePage() {
       <footer className="border-t-4 border-black bg-white py-12 px-6">
         <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="flex items-center gap-3">
-            <span className="text-xl font-black text-black uppercase tracking-widest">AU Drive</span>
+            <span className="text-xl font-black text-black uppercase tracking-widest">EchoDrive</span>
           </div>
           <p className="font-bold text-black text-sm uppercase">
-            © {new Date().getFullYear()} AU Drive. All rights reserved.
+            © {new Date().getFullYear()} EchoDrive. All rights reserved.
           </p>
         </div>
       </footer>

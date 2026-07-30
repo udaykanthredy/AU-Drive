@@ -68,22 +68,11 @@ const checkDuplicate = catchAsync(async (req, res) => {
   const existingFile = await File.findOne({ ownerId, contentHash });
 
   if (existingFile) {
-    // Perform Virtual Upload! Create a new file record pointing to the same R2 key
-    const newFile = await filesService.createFileRecord({
-      ownerId,
-      name,
-      size,
-      mimeType,
-      r2Key: existingFile.r2Key, // Reuse the same Cloudflare R2 object
-      contentHash,
-      folderId: folderId || null,
+    return res.status(409).json({
+      success: false,
+      message: 'This exact file already exists in your drive.',
+      data: existingFile
     });
-
-    // Don't need to re-run AI processing if the hash is the same and we could just copy metadata,
-    // but for now enqueueing it ensures the new record gets the AI summary too.
-    await enqueueFileProcessing(newFile._id, newFile.r2Key);
-
-    return res.json({ success: true, isDuplicate: true, data: newFile });
   }
 
   res.json({ success: true, isDuplicate: false });
@@ -232,7 +221,7 @@ const bulkDownload = catchAsync(async (req, res) => {
     return res.status(404).json({ success: false, message: 'Files not found' });
   }
 
-  res.attachment('AU-Drive-Export.zip');
+  res.attachment('EchoDrive-Export.zip');
   const archive = archiver('zip', { zlib: { level: 9 } });
 
   archive.on('error', (err) => res.status(500).send({ error: err.message }));

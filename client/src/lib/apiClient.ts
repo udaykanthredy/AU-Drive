@@ -18,7 +18,7 @@ apiClient.interceptors.request.use(
   (config) => {
     // Read token from Zustand persisted state
     try {
-      const raw = localStorage.getItem('au-drive-auth');
+      const raw = localStorage.getItem('echodrive-auth');
       if (raw) {
         const state = JSON.parse(raw);
         const token = state?.state?.accessToken;
@@ -48,11 +48,11 @@ apiClient.interceptors.response.use(
         if (newToken) {
           // Update the token in Zustand store via localStorage
           try {
-            const raw = localStorage.getItem('au-drive-auth');
+            const raw = localStorage.getItem('echodrive-auth');
             if (raw) {
               const state = JSON.parse(raw);
               state.state.accessToken = newToken;
-              localStorage.setItem('au-drive-auth', JSON.stringify(state));
+              localStorage.setItem('echodrive-auth', JSON.stringify(state));
             }
           } catch (e) {
             console.error('Failed to update token in local storage', e);

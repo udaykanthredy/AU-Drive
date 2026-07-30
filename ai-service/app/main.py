@@ -25,7 +25,7 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(
-    title="AU-Drive AI Service",
+    title="EchoDrive AI Service",
     description="AI microservice for semantic search, summarization, and RAG chat",
     version="1.0.0",
     lifespan=lifespan,
@@ -65,4 +65,4 @@ async def health_check():
 # ── Root ──────────────────────────────────────────────────────────────────────
 @app.get("/", tags=["Root"])
 async def root():
-    return {"message": "AU-Drive AI Service", "docs": "/docs"}
+    return {"message": "EchoDrive AI Service", "docs": "/docs"}
