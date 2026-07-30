@@ -8,22 +8,30 @@
   --topbar-height: 60px;
 }
 
-/* ── Scrollbar ──────────────────────────────────────────────────────────────── */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-::-webkit-scrollbar-thumb {
-  background: #374151;
-  border-radius: 3px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #4b5563;
+/* ── Text Selection ─────────────────────────────────────────────────────────── */
+::selection {
+  background-color: #ff90e8; /* neo-pink */
+  color: #000;
 }
 
+/* ── Scrollbar ──────────────────────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 16px;
+  height: 16px;
+}
+::-webkit-scrollbar-track {
+  background: #ffffff;
+  border-left: 4px solid #000;
+  border-top: 4px solid #000;
+}
+::-webkit-scrollbar-thumb {
+  background: #000;
+  border: 2px solid #ffffff;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #ff90e8;
+  border: 2px solid #000;
+}
 /* ── Utilities ──────────────────────────────────────────────────────────────── */
 @layer utilities {
   .truncate-2 {
