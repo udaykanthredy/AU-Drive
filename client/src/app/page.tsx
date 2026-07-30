@@ -37,35 +37,35 @@ export default function HomePage() {
 
       {/* Hero Section */}
       <main className="flex-1">
-        <section className="relative px-6 py-20 md:py-32 flex flex-col items-center text-center border-b-4 border-black bg-neo-yellow overflow-hidden">
+        <section className="relative px-6 py-12 md:py-20 flex flex-col items-center text-center border-b-4 border-black bg-neo-yellow overflow-hidden">
           {/* Decorative shapes */}
-          <div className="absolute top-10 left-10 w-24 h-24 bg-neo-pink border-4 border-black rounded-full shadow-neo hidden md:block"></div>
-          <div className="absolute bottom-10 right-20 w-32 h-32 bg-neo-blue border-4 border-black rotate-12 shadow-neo hidden lg:block"></div>
-          <div className="absolute top-20 right-10 w-16 h-16 bg-brand-500 border-4 border-black rotate-45 shadow-neo hidden md:block"></div>
+          <div className="absolute top-10 left-10 w-16 h-16 bg-neo-pink border-4 border-black rounded-full shadow-neo hidden md:block"></div>
+          <div className="absolute bottom-10 right-20 w-24 h-24 bg-neo-blue border-4 border-black rotate-12 shadow-neo hidden lg:block"></div>
+          <div className="absolute top-20 right-10 w-12 h-12 bg-brand-500 border-4 border-black rotate-45 shadow-neo hidden md:block"></div>
           
-          <div className="max-w-4xl relative z-10 space-y-8">
-            <h1 className="text-6xl md:text-8xl font-black text-black uppercase leading-[1.1] tracking-tight">
+          <div className="max-w-4xl relative z-10 space-y-6">
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-black uppercase leading-[1.15] tracking-tight">
               The File Storage <br className="hidden md:block" />
               <span className="bg-white px-4 py-2 border-4 border-black shadow-neo inline-block mt-4 -rotate-2">
                 That Talks Back.
               </span>
             </h1>
             
-            <p className="text-xl md:text-2xl font-bold text-black max-w-2xl mx-auto leading-relaxed">
+            <p className="text-lg md:text-xl font-bold text-black max-w-2xl mx-auto leading-relaxed">
               Ditch the boring folders. Store, search, and chat directly with your files using next-gen AI. It's like a brain for your drive.
             </p>
             
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-8">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-6">
               <Link
                 href="/register"
-                className="group flex items-center gap-3 px-8 py-4 bg-brand-500 text-black font-black uppercase text-lg border-4 border-black shadow-neo hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-none transition-all"
+                className="group flex items-center gap-2 px-6 py-3 bg-brand-500 text-black font-black uppercase text-base border-4 border-black shadow-neo hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-none transition-all"
               >
                 Get Started
-                <ArrowRight className="w-6 h-6 stroke-[3] group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="w-5 h-5 stroke-[3] group-hover:translate-x-1 transition-transform" />
               </Link>
               <Link
                 href="/login"
-                className="px-8 py-4 bg-white text-black font-black uppercase text-lg border-4 border-black shadow-neo hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-none transition-all"
+                className="px-6 py-3 bg-white text-black font-black uppercase text-base border-4 border-black shadow-neo hover:translate-x-[4px] hover:translate-y-[4px] hover:shadow-none transition-all"
               >
                 Log In
               </Link>
