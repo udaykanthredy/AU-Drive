@@ -66,8 +66,14 @@ export function Sidebar() {
     <aside className="w-64 flex-shrink-0 bg-neo-bg border-r-4 border-black flex flex-col z-20 relative">
       {/* Logo */}
       <div className="px-6 py-6 flex items-center gap-3 relative z-10">
-        <div className="w-9 h-9 bg-brand-500 flex items-center justify-center border-2 border-black shadow-neo-sm">
-          <HardDrive className="w-5 h-5 text-black" />
+        <div className="w-10 h-10 flex items-center justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" className="w-full h-full">
+            <rect x="14" y="14" width="72" height="72" fill="#000000" />
+            <rect x="4" y="4" width="72" height="72" fill="#22c55e" stroke="#000000" strokeWidth="6" />
+            <path d="M 22 40 L 58 40" stroke="#000000" strokeWidth="6" strokeLinecap="round" />
+            <path d="M 22 56 L 46 56" stroke="#000000" strokeWidth="6" strokeLinecap="round" />
+            <rect x="22" y="24" width="12" height="12" fill="#FDE047" stroke="#000000" strokeWidth="4" />
+          </svg>
         </div>
         <span className="font-bold tracking-wide text-black text-xl font-sans uppercase">AU Drive</span>
       </div>
