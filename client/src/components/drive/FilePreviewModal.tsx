@@ -31,16 +31,16 @@ export function FilePreviewModal() {
     <Dialog.Root open={!!previewFileId} onOpenChange={(open) => !open && handleClose()}>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 animate-in fade-in flex items-center justify-center p-4">
-          <Dialog.Content className="relative bg-gray-900 border border-gray-800 rounded-xl shadow-2xl flex flex-col max-w-5xl w-full h-full max-h-[90vh] overflow-hidden animate-in zoom-in-95">
+          <Dialog.Content className="relative bg-white border-4 border-black shadow-neo flex flex-col max-w-5xl w-full h-full max-h-[90vh] overflow-hidden animate-in zoom-in-95 rounded-none">
             {/* Header */}
-            <div className="flex items-center justify-between px-4 py-3 border-b border-gray-800 bg-gray-950/50 flex-shrink-0">
+            <div className="flex items-center justify-between px-4 py-3 border-b-4 border-black bg-neo-blue flex-shrink-0">
               <div className="flex items-center gap-3 overflow-hidden">
-                {fileWrapper ? getFileIcon(fileWrapper.mimeType, "w-5 h-5 text-brand-400 flex-shrink-0") : null}
+                {fileWrapper ? getFileIcon(fileWrapper.mimeType, "w-6 h-6 text-black flex-shrink-0") : null}
                 <div>
-                  <Dialog.Title className="text-sm font-semibold text-gray-200 truncate">
+                  <Dialog.Title className="text-lg font-bold text-black truncate uppercase tracking-widest">
                     {fileWrapper?.name || 'Loading...'}
                   </Dialog.Title>
-                  <p className="text-xs text-gray-500">
+                  <p className="text-sm text-black font-bold">
                     {fileWrapper ? formatBytes(fileWrapper.size) : ''}
                   </p>
                 </div>
@@ -53,15 +53,15 @@ export function FilePreviewModal() {
                     download={fileWrapper.name}
                     target="_blank"
                     rel="noreferrer"
-                    className="p-2 text-gray-400 hover:text-white hover:bg-gray-800 rounded-lg transition-colors"
+                    className="p-2 text-black hover:bg-white border-2 border-transparent hover:border-black transition-colors"
                     title="Download File"
                   >
-                    <Download className="w-5 h-5" />
+                    <Download className="w-5 h-5 stroke-[3]" />
                   </a>
                 )}
                 <Dialog.Close asChild>
-                  <button className="p-2 text-gray-400 hover:text-white hover:bg-gray-800 rounded-lg transition-colors">
-                    <X className="w-5 h-5" />
+                  <button className="p-2 text-black hover:bg-white border-2 border-transparent hover:border-black transition-colors">
+                    <X className="w-5 h-5 stroke-[3]" />
                   </button>
                 </Dialog.Close>
               </div>
@@ -70,18 +70,18 @@ export function FilePreviewModal() {
             {/* Content Body */}
             <div className="flex-1 flex overflow-hidden">
               {/* Main Preview Area */}
-              <div className="flex-1 overflow-auto flex items-center justify-center bg-gray-950 p-4">
+              <div className="flex-1 overflow-auto flex items-center justify-center bg-neo-bg p-4">
                 {isLoading && (
-                  <div className="flex flex-col items-center text-brand-500">
+                  <div className="flex flex-col items-center text-black">
                     <Loader2 className="w-8 h-8 animate-spin mb-2" />
-                    <span className="text-sm font-medium">Fetching file...</span>
+                    <span className="text-sm font-bold">Fetching file...</span>
                   </div>
                 )}
 
                 {error && (
-                  <div className="text-center text-red-400 max-w-md">
-                    <p className="font-semibold mb-1">Failed to load preview</p>
-                    <p className="text-sm opacity-80">{(error as any)?.message || 'Ensure your Cloudflare R2 credentials are valid in .env'}</p>
+                  <div className="text-center text-black border-4 border-black bg-red-500 p-4 shadow-neo max-w-md">
+                    <p className="font-bold mb-1 uppercase">Failed to load preview</p>
+                    <p className="text-sm font-bold">{(error as any)?.message || 'Ensure your Cloudflare R2 credentials are valid in .env'}</p>
                   </div>
                 )}
 
@@ -97,19 +97,19 @@ export function FilePreviewModal() {
                     ) : fileWrapper.mimeType === 'application/pdf' ? (
                       <iframe
                         src={fileWrapper.presignedUrl}
-                        className="w-full h-full rounded-md border-0 bg-white"
+                        className="w-full h-full border-4 border-black shadow-neo bg-white"
                         title={fileWrapper.name}
                       />
                     ) : (
                       // Fallback for non-previewable files
-                      <div className="flex flex-col items-center justify-center text-center p-8 bg-gray-900 border border-gray-800 rounded-xl shadow-lg max-w-sm">
-                        <div className="w-16 h-16 bg-gray-800 rounded-full flex items-center justify-center mb-4">
-                          {getFileIcon(fileWrapper.mimeType, "w-8 h-8 text-brand-500")}
+                      <div className="flex flex-col items-center justify-center text-center p-8 bg-white border-4 border-black shadow-neo max-w-sm">
+                        <div className="w-16 h-16 bg-neo-yellow border-2 border-black rounded-full flex items-center justify-center mb-4 shadow-neo-sm">
+                          {getFileIcon(fileWrapper.mimeType, "w-8 h-8 text-black")}
                         </div>
-                        <h3 className="text-lg font-medium text-gray-200 mb-2 truncate w-full">
+                        <h3 className="text-lg font-bold text-black mb-2 truncate w-full">
                           {fileWrapper.name}
                         </h3>
-                        <p className="text-sm text-gray-400 mb-6">
+                        <p className="text-sm text-black font-bold mb-6">
                           No preview available for this file type.
                         </p>
                         <a
@@ -117,9 +117,9 @@ export function FilePreviewModal() {
                           download={fileWrapper.name}
                           target="_blank"
                           rel="noreferrer"
-                          className="inline-flex items-center gap-2 bg-brand-600 hover:bg-brand-500 text-white px-5 py-2.5 rounded-lg font-medium transition-colors"
+                          className="inline-flex items-center gap-2 bg-brand-500 hover:bg-brand-400 text-black border-2 border-black shadow-neo-sm hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none px-5 py-2.5 font-bold transition-all"
                         >
-                          <Download className="w-4 h-4" />
+                          <Download className="w-5 h-5 stroke-[3]" />
                           Download File
                         </a>
                       </div>
@@ -129,31 +129,31 @@ export function FilePreviewModal() {
               </div>
 
               {/* AI Summary Sidebar */}
-              <div className="w-80 bg-gray-900 border-l border-gray-800 p-6 flex flex-col overflow-y-auto hidden md:flex shrink-0">
-                <div className="flex items-center gap-2 mb-4 text-brand-400">
-                  <Sparkles className="w-5 h-5" />
-                  <h3 className="font-semibold text-sm uppercase tracking-wider">AI Summary</h3>
+              <div className="w-80 bg-white border-l-4 border-black p-6 flex flex-col overflow-y-auto hidden md:flex shrink-0">
+                <div className="flex items-center gap-2 mb-4 text-black">
+                  <Sparkles className="w-6 h-6 text-brand-500" />
+                  <h3 className="font-bold text-lg uppercase tracking-widest">AI Summary</h3>
                 </div>
                 
                 {isSummaryLoading ? (
                   <div className="flex flex-col items-center justify-center h-32 space-y-3">
-                    <Loader2 className="w-6 h-6 animate-spin text-brand-500" />
-                    <span className="text-xs text-gray-400">Analyzing document...</span>
+                    <Loader2 className="w-8 h-8 animate-spin text-black" />
+                    <span className="text-sm font-bold text-black uppercase">Analyzing document...</span>
                   </div>
                 ) : summaryData?.summary ? (
                   <div className="space-y-6">
-                    <div className="text-sm text-gray-300 leading-relaxed bg-gray-950 p-4 rounded-xl border border-gray-800 shadow-inner">
+                    <div className="text-sm text-black font-bold leading-relaxed bg-neo-yellow p-4 border-4 border-black shadow-neo">
                       {summaryData.summary}
                     </div>
                     
                     {summaryData.tags && summaryData.tags.length > 0 && (
                       <div>
-                        <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Topic Tags</h4>
+                        <h4 className="text-sm font-bold text-black uppercase tracking-wider mb-3 underline decoration-4 decoration-neo-pink underline-offset-4">Topic Tags</h4>
                         <div className="flex flex-wrap gap-2">
                           {summaryData.tags.map((tag: string, i: number) => (
                             <span 
                               key={i}
-                              className="px-2.5 py-1 text-xs font-medium bg-brand-500/10 text-brand-300 border border-brand-500/20 rounded-md"
+                              className="px-3 py-1.5 text-sm font-bold bg-neo-pink text-black border-2 border-black shadow-neo-sm"
                             >
                               {tag}
                             </span>
@@ -163,15 +163,15 @@ export function FilePreviewModal() {
                     )}
                   </div>
                 ) : summaryData?.processingStatus === 'failed' ? (
-                  <div className="flex flex-col items-center justify-center h-32 text-center text-red-400">
-                    <X className="w-8 h-8 mb-2 opacity-80 text-red-500" />
-                    <p className="text-xs font-semibold">Summary generation failed.</p>
-                    <p className="text-xs mt-1 opacity-80">Invalid API key or file unreadable.</p>
+                  <div className="flex flex-col items-center justify-center h-32 text-center text-black font-bold">
+                    <X className="w-10 h-10 mb-2 stroke-[3]" />
+                    <p className="text-sm uppercase bg-red-500 px-2 py-1 border-2 border-black">Summary failed.</p>
+                    <p className="text-xs mt-2">Invalid API key or file unreadable.</p>
                   </div>
                 ) : (
-                  <div className="flex flex-col items-center justify-center h-32 text-center text-gray-500">
-                    <FileText className="w-8 h-8 mb-2 opacity-50" />
-                    <p className="text-xs">No summary available yet.</p>
+                  <div className="flex flex-col items-center justify-center h-32 text-center text-black font-bold">
+                    <FileText className="w-10 h-10 mb-2 stroke-[2]" />
+                    <p className="text-sm uppercase">No summary yet.</p>
                     <p className="text-xs mt-1">Processing in background...</p>
                   </div>
                 )}
