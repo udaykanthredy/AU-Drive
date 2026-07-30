@@ -97,10 +97,18 @@ async function refreshToken(req, res, next) {
 async function getMe(req, res, next) {
   try {
     const User = require('../../models/User.model');
+    const File = require('../../models/File.model');
     const user = await User.findById(req.user.userId);
     if (!user) {
       return res.status(404).json({ success: false, message: 'User not found' });
     }
+
+    // Calculate dynamic storage usage to prevent desync
+    const result = await File.aggregate([
+      { $match: { ownerId: user._id, isDeleted: false } },
+      { $group: { _id: null, totalSize: { $sum: '$size' } } }
+    ]);
+    const actualStorageUsed = result[0]?.totalSize || 0;
 
     return res.status(200).json({
       success: true,
@@ -108,7 +116,7 @@ async function getMe(req, res, next) {
         id: user._id,
         name: user.name,
         email: user.email,
-        storageUsed: user.storageUsed,
+        storageUsed: actualStorageUsed,
         storageQuota: user.storageQuota,
         createdAt: user.createdAt,
       },
