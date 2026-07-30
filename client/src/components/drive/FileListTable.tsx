@@ -13,9 +13,10 @@ interface FileListTableProps {
   folders: Folder[];
   onFolderClick?: (folder: Folder) => void;
   onFileDoubleClick?: (file: FileModel) => void;
+  showPath?: boolean; // show folder path info (used in Recent view)
 }
 
-export function FileListTable({ files, folders, onFolderClick, onFileDoubleClick }: FileListTableProps) {
+export function FileListTable({ files, folders, onFolderClick, onFileDoubleClick, showPath }: FileListTableProps) {
   const queryClient = useQueryClient();
   const { setShareFile } = useUIStore();
 

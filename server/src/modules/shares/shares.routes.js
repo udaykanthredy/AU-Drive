@@ -12,6 +12,9 @@ const router = Router();
  */
 router.post('/', verifyToken, sharesController.createShare);
 
+// List current user's own shares (auth required — must come before /:token)
+router.get('/', verifyToken, sharesController.listMyShares);
+
 // Public route — validate token, check expiry, return presigned URL
 router.get('/:token', optionalToken, sharesController.getShare);
 
