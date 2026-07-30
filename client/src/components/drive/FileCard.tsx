@@ -1,3 +1,5 @@
+'use client';
+
 import { FileText, Image as ImageIcon, File, MoreVertical, Star, ShieldAlert, AlertCircle, Loader2 } from 'lucide-react';
 import type { File as FileModel } from '@/types';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
@@ -132,6 +134,6 @@ export function FileCard({ file, onDoubleClicked }: FileCardProps) {
           </DropdownMenu.Portal>
         </DropdownMenu.Root>
       </div>
-    </div>
+    </motion.div>
   );
 }

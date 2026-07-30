@@ -1,3 +1,5 @@
+'use client';
+
 import { Folder as FolderIcon, MoreVertical } from 'lucide-react';
 import { Folder } from '@/types';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';

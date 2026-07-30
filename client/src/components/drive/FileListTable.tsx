@@ -1,3 +1,5 @@
+'use client';
+
 import { format } from 'date-fns';
 import { MoreVertical, Star, Folder as FolderIcon, ShieldAlert, Loader2, AlertCircle } from 'lucide-react';
 import type { File as FileModel, Folder } from '@/types';
